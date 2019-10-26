@@ -62,7 +62,6 @@ https://discord.gg/uej2FZd
 
 
 License
-<<<<<<< HEAD
 -------
 
 StakeCubeCoin is released under the terms of the MIT license.
@@ -73,4 +72,3 @@ StakeCubeCoin is derived from code developed by the Dashpay team (https://github
 =======
 ---------------------
 Distributed under the [MIT software license](/COPYING).
->>>>>>> merge bitcoin#17265: Remove OpenSSL
