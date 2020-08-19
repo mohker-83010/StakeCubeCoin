@@ -12,10 +12,10 @@
 #include <script/sign.h>
 #include <util.h>
 #include <utilstrencodings.h>
-#include <test/test_dash.h>
+#include <test/test_scc.h>
 
 #if defined(HAVE_CONSENSUS_LIB)
-#include <script/dashconsensus.h>
+#include <script/sccconsensus.h>
 #endif
 
 #include <fstream>

@@ -9,7 +9,7 @@
 #include <util.h>
 #include <utilstrencodings.h>
 
-#include <dash-config.h>
+#include <scc-config.h>
 
 #include <mutex>
 #include <map>
