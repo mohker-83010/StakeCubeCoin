@@ -135,7 +135,7 @@ public:
 };
 
 /**
- * Dash RPC command dispatcher.
+ * StakeCubeCoin RPC command dispatcher.
  */
 class CRPCTable
 {

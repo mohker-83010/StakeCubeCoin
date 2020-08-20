@@ -41,14 +41,14 @@
 
 // Uncomment the following line to enable debugging messages
 // or enable on a per file basis prior to inclusion of util.h
-//#define ENABLE_DASH_DEBUG
-#ifdef ENABLE_DASH_DEBUG
+//#define ENABLE_SCC_DEBUG
+#ifdef ENABLE_SCC_DEBUG
 #define DBG( x ) x
 #else
 #define DBG( x )
 #endif
 
-//Dash only features
+//StakeCubeCoin only features
 
 extern bool fMasternodeMode;
 extern bool fDisableGovernance;
@@ -296,7 +296,7 @@ void RenameThreadPool(ctpl::thread_pool& tp, const char* baseName);
  */
 template <typename Callable> void TraceThread(const std::string name,  Callable func)
 {
-    std::string s = "dash-" + name;
+    std::string s = "scc-" + name;
     RenameThread(s.c_str());
     try
     {
