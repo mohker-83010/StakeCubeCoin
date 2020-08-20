@@ -1304,7 +1304,7 @@ void RPCConsole::changeEvent(QEvent* e)
 {
     if (e->type() == QEvent::StyleChange) {
         clear();
-        ui->promptIcon->setHidden(GUIUtil::dashThemeActive());
+        ui->promptIcon->setHidden(GUIUtil::sccThemeActive());
     }
 
     QWidget::changeEvent(e);

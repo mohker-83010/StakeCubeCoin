@@ -33,9 +33,9 @@ SendCoinsEntry::SendCoinsEntry(QWidget* parent) :
     ui->deleteButton_is->setIcon(QIcon(":/icons/remove"));
     ui->deleteButton_s->setIcon(QIcon(":/icons/remove"));
 
-    // normal dash address field
+    // normal StakeCubeCoin address field
     GUIUtil::setupAddressWidget(ui->payTo, this, true);
-    // just a label for displaying dash address(es)
+    // just a label for displaying SCC address(es)
     ui->payTo_is->setFont(GUIUtil::fixedPitchFont());
 
     GUIUtil::setFont({ui->payToLabel,
