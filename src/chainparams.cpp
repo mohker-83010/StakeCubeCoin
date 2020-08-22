@@ -292,13 +292,12 @@ public:
         consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
 
         // StakeCubeCoin : We do not use BudgetPayments, Superblocks and Governance
-        // TODO: Clean up code
-        consensus.nBudgetPaymentsStartBlock = 328008; // actual historical value
-        consensus.nBudgetPaymentsCycleBlocks = 16616; // ~(60*24*30)/2.6, actual number of blocks per month is 200700 / 12 = 16725
+        consensus.nBudgetPaymentsStartBlock = INT_MAX; // 2147483647 (= never | requires hardfork to enable)
+        consensus.nBudgetPaymentsCycleBlocks = 21600; // ~(60*24*30)/2
         consensus.nBudgetPaymentsWindowBlocks = 100;
-        consensus.nSuperblockStartBlock = 614820; // The block at which 12.1 goes live (end of final 12.0 budget cycle)
-        consensus.nSuperblockStartHash = uint256S("0000000000020cb27c7ef164d21003d5d20cdca2f54dd9a9ca6d45f4d47f8aa3");
-        consensus.nSuperblockCycle = 16616; // ~(60*24*30)/2.6, actual number of blocks per month is 200700 / 12 = 16725
+        consensus.nSuperblockStartBlock = INT_MAX; // 2147483647 (= never | requires hardfork to enable)
+        consensus.nSuperblockStartHash = uint256();
+        consensus.nSuperblockCycle = 21600; // ~(60*24*30)/2
         consensus.nGovernanceMinQuorum = 10;
         consensus.nGovernanceFilterElements = 20000;
         // End StakeCubeCoin
@@ -499,13 +498,12 @@ public:
         consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
 
         // StakeCubeCoin : We do not use BudgetPayments, Superblocks and Governance
-        // TODO: Clean up code
-        consensus.nBudgetPaymentsStartBlock = 328008; // actual historical value
-        consensus.nBudgetPaymentsCycleBlocks = 16616; // ~(60*24*30)/2.6, actual number of blocks per month is 200700 / 12 = 16725
+        consensus.nBudgetPaymentsStartBlock = INT_MAX; // 2147483647 (= never | requires hardfork to enable)
+        consensus.nBudgetPaymentsCycleBlocks = 21600; // ~(60*24*30)/2
         consensus.nBudgetPaymentsWindowBlocks = 100;
-        consensus.nSuperblockStartBlock = 614820; // The block at which 12.1 goes live (end of final 12.0 budget cycle)
-        consensus.nSuperblockStartHash = uint256S("0000000000020cb27c7ef164d21003d5d20cdca2f54dd9a9ca6d45f4d47f8aa3");
-        consensus.nSuperblockCycle = 16616; // ~(60*24*30)/2.6, actual number of blocks per month is 200700 / 12 = 16725
+        consensus.nSuperblockStartBlock = INT_MAX; // 2147483647 (= never | requires hardfork to enable)
+        consensus.nSuperblockStartHash = uint256();
+        consensus.nSuperblockCycle = 21600; // ~(60*24*30)/2
         consensus.nGovernanceMinQuorum = 10;
         consensus.nGovernanceFilterElements = 20000;
         // End StakeCubeCoin
@@ -630,7 +628,7 @@ public:
         nPoolNewMaxParticipants = 20;
         nFulfilledRequestExpireTime = 5*60; // fulfilled requests expire in 5 minutes
 
-        vSporkAddresses = {"sYTdVsTdJGSwHftSeSh6iXoRyyTX3uzNoS"};
+        vSporkAddresses = {"yheGKmrzUsnir4Szkbrjtjha8PMkCakWJZ"};
         nMinSporkKeys = 1;
         fBIP9CheckMasternodesUpgraded = true;
 
