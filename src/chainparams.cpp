@@ -261,7 +261,7 @@ public:
         consensus.nSubsidyHalvingInterval = 400000U; // unused
 
         /** Masternodes **/
-        consensus.nMasternodePaymentsStartBlock     = 100;
+        consensus.nMasternodePaymentsStartBlock     = 200;
         consensus.nMasternodePaymentsIncreaseBlock  = 400000U; // unused
         consensus.nMasternodePaymentsIncreasePeriod = 400000U; // unused
         consensus.nMasternodeMinimumConfirmations   = 15;
@@ -467,7 +467,7 @@ public:
         consensus.nSubsidyHalvingInterval = 400000U; // unused
 
         /** Masternodes **/
-        consensus.nMasternodePaymentsStartBlock     = 100;
+        consensus.nMasternodePaymentsStartBlock     = 200;
         consensus.nMasternodePaymentsIncreaseBlock  = 400000U; // unused
         consensus.nMasternodePaymentsIncreasePeriod = 400000U; // unused
         consensus.nMasternodeMinimumConfirmations   = 15;
