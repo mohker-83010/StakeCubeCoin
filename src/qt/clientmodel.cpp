@@ -156,10 +156,10 @@ QDateTime ClientModel::getLastBlockDate() const
 QString ClientModel::getLastBlockHash() const
 {
     LOCK(cs_main);
-    
+
     if (chainActive.Tip())
         return QString::fromStdString(chainActive.Tip()->GetBlockHash().ToString());
-    
+
     return QString::fromStdString(Params().GenesisBlock().GetHash().ToString()); // Genesis block's hash of current network
 }
 
@@ -354,7 +354,7 @@ static void BlockTipChanged(ClientModel *clientmodel, bool initialSync, const CB
         QMetaObject::invokeMethod(clientmodel, "numBlocksChanged", Qt::QueuedConnection,
                                   Q_ARG(int, pIndex->nHeight),
                                   Q_ARG(QDateTime, QDateTime::fromTime_t(pIndex->GetBlockTime())),
-                                  Q_ARG(QString, clientmodel->getLastBlockHash()),
+                                  Q_ARG(QString, QString::fromStdString(pIndex->GetBlockHash().ToString())),
                                   Q_ARG(double, clientmodel->getVerificationProgress(pIndex)),
                                   Q_ARG(bool, fHeader));
         nLastUpdateNotification = now;
