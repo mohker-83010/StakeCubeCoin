@@ -1,6 +1,7 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2015 The Bitcoin Core developers
 // Copyright (c) 2014-2020 The Dash Core developers
+// Copyright (c) 2018-2020 The StakeCubeCoin developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -1123,6 +1124,11 @@ CAmount GetBlockSubsidy(int nPrevBits, int nPrevHeight, const Consensus::Params&
 {
     int64_t nSubsidy = 0;
     int nHeight = nPrevHeight + 1;
+    
+    // TESTNET: Multiply nHeight by 10 to simulate block subsidy changes 10x faster than mainnet
+    // E.g: Mainnet: 5000 == Testnet: 500...
+    if (Params().NetworkIDString() == "test")
+        nHeight *= 10;
 
     if (nHeight == 0) { nSubsidy = 0 * COIN;
     } else if (nHeight == 1)                            { nSubsidy = 7500000 * COIN;    // Supply for swap (SCC 2x -> SCC 3x) 
