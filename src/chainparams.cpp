@@ -317,7 +317,7 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nTimeout      = 1539561600; // Oct 15th, 2018
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nWindowSize   = 100;
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nThreshold    = 50;
-        
+
         // Deployment of BIP147
         consensus.vDeployments[Consensus::DEPLOYMENT_BIP147].bit            = 2;
         consensus.vDeployments[Consensus::DEPLOYMENT_BIP147].nStartTime     = 1524477600; // Apr 23th, 2018
@@ -356,7 +356,7 @@ public:
         pchMessageStart[3] = 0x51;
         nDefaultPort = 40000;
         nPruneAfterHeight = 100000;
-        
+
         genesis = CreateGenesisBlock(1598001151, 645769, 0x1e0ffff0, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
 
@@ -377,13 +377,13 @@ public:
                 LogPrintf("-nonce: %u\n", genesis.nNonce);
                 LogPrintf("-time: %u\n", genesis.nTime);
                 LogPrintf("-hash: 0x%s\n", genesis.GetHash().ToString().c_str());
-                LogPrintf("-merklehash: 0x%s\n", genesis.hashMerkleRoot.ToString().c_str()); 
-            }     
+                LogPrintf("-merklehash: 0x%s\n", genesis.hashMerkleRoot.ToString().c_str());
+            }
         }
         else {
             assert(consensus.hashGenesisBlock == uint256S("0x000005724ce8722ff0fd55db0af7caeb70cb8583e97c896a01615eb90b149ff4"));
-            assert(genesis.hashMerkleRoot == uint256S("0x78f555aed2bf8f35b9141a05b7cd7349c320dc072ac02f286d3d216cd0205ba7")); 
-        }          
+            assert(genesis.hashMerkleRoot == uint256S("0x78f555aed2bf8f35b9141a05b7cd7349c320dc072ac02f286d3d216cd0205ba7"));
+        }
 
         // Note that of those which support the service bits prefix, most only support a subset of
         // possible options.
@@ -420,8 +420,8 @@ public:
         fRequireStandard = true;
         fRequireRoutableExternalIP = true;
         fMineBlocksOnDemand = false;
-        fAllowMultipleAddressesFromGroup = false;
-        fAllowMultiplePorts = false;
+        fAllowMultipleAddressesFromGroup = true;
+        fAllowMultiplePorts = true;
         nLLMQConnectionRetryTimeout = 60;
 
         nPoolMinParticipants = 3;
@@ -523,7 +523,7 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nTimeout      = 1539561600; // Oct 15th, 2018
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nWindowSize   = 100;
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0001].nThreshold    = 50;
-        
+
         // Deployment of BIP147
         consensus.vDeployments[Consensus::DEPLOYMENT_BIP147].bit            = 2;
         consensus.vDeployments[Consensus::DEPLOYMENT_BIP147].nStartTime     = 1524477600; // Apr 23th, 2018
@@ -560,7 +560,7 @@ public:
 
         genesis = CreateGenesisBlock(1598001152UL, 1867873UL, 0x1e0ffff0, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        
+
         if (regenerate) {
             consensus.hashGenesisBlock = uint256S("");
             genesis.nNonce = 0;
@@ -578,12 +578,12 @@ public:
                 LogPrintf("-nonce: %u\n", genesis.nNonce);
                 LogPrintf("-time: %u\n", genesis.nTime);
                 LogPrintf("-hash: 0x%s\n", genesis.GetHash().ToString().c_str());
-                LogPrintf("-merklehash: 0x%s\n", genesis.hashMerkleRoot.ToString().c_str()); 
-            }     
+                LogPrintf("-merklehash: 0x%s\n", genesis.hashMerkleRoot.ToString().c_str());
+            }
         }
         else {
             assert(consensus.hashGenesisBlock == uint256S("0x00000ca5c4cf89b4cd61c836f50b1eccc18b8e916cfc27152ea47b5e6467cf68"));
-            assert(genesis.hashMerkleRoot == uint256S("0x78f555aed2bf8f35b9141a05b7cd7349c320dc072ac02f286d3d216cd0205ba7")); 
+            assert(genesis.hashMerkleRoot == uint256S("0x78f555aed2bf8f35b9141a05b7cd7349c320dc072ac02f286d3d216cd0205ba7"));
         }
 
         vFixedSeeds.clear();
@@ -591,7 +591,7 @@ public:
 
         vSeeds.clear();
         // nodes with support for servicebits filtering should be at the top
-        vSeeds.emplace_back("test-seed1.stakecube.net"); // TODO: Deploy testnet DNS seeder 
+        vSeeds.emplace_back("test-seed1.stakecube.net"); // TODO: Deploy testnet DNS seeder
 
         // Testnet StakeCubeCoin addresses start with 'y'
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,140);
@@ -618,7 +618,7 @@ public:
         fRequireStandard = false;
         fRequireRoutableExternalIP = true;
         fMineBlocksOnDemand = false;
-        fAllowMultipleAddressesFromGroup = false;
+        fAllowMultipleAddressesFromGroup = true;
         fAllowMultiplePorts = true;
         nLLMQConnectionRetryTimeout = 60;
 
