@@ -1125,24 +1125,36 @@ CAmount GetBlockSubsidy(int nPrevBits, int nPrevHeight, const Consensus::Params&
     int64_t nSubsidy = 0;
     int nHeight = nPrevHeight + 1;
     
-    // TESTNET: Multiply nHeight by 10 to simulate block subsidy changes 10x faster than mainnet
-    // E.g: Mainnet: 5000 == Testnet: 500...
-    if (Params().NetworkIDString() == "test")
-        nHeight *= 10;
-
-    if (nHeight == 0) { nSubsidy = 0 * COIN;
-    } else if (nHeight == 1)                            { nSubsidy = 7500000 * COIN;    // Supply for swap (SCC 2x -> SCC 3x) 
-    } else if (nHeight > 1       && nHeight <= 5000)    { nSubsidy = 0.1 * COIN;        // Fair start ~7 days (5000/720 = 6,944444)
-    } else if (nHeight > 5000    && nHeight <= 250000)  { nSubsidy = 9 * COIN;          // 1 year
-    } else if (nHeight > 250000  && nHeight <= 500000)  { nSubsidy = 8 * COIN;
-    } else if (nHeight > 500000  && nHeight <= 750000)  { nSubsidy = 7 * COIN;
-    } else if (nHeight > 750000  && nHeight <= 1000000) { nSubsidy = 6 * COIN;
-    } else if (nHeight > 1000000 && nHeight <= 1250000) { nSubsidy = 5 * COIN;
-    } else if (nHeight > 1250000 && nHeight <= 1500000) { nSubsidy = 4 * COIN;
-    } else if (nHeight > 1500000 && nHeight <= 1750000) { nSubsidy = 3 * COIN;
-    } else if (nHeight > 1750000 && nHeight <= 2000000) { nSubsidy = 2 * COIN;
-    } else if (nHeight > 2000000 && nHeight <= 2250000) { nSubsidy = 1 * COIN;
-    } else if (nHeight > 2250000)                       { nSubsidy = 0.5 * COIN; }      // Until max supply (18.000.000 SCC) reached in ~10 years / at block ~2 500 000
+    // TESTNET: Use a 10x faster block reward schedule for front-running testnet over mainnet
+    if (Params().NetworkIDString() == "test") {
+        if (nHeight == 0) { nSubsidy = 0 * COIN;
+        } else if (nHeight == 1)                          { nSubsidy = 7500000 * COIN;
+        } else if (nHeight > 1      && nHeight <= 500)    { nSubsidy = 0.1 * COIN;
+        } else if (nHeight > 500    && nHeight <= 25000)  { nSubsidy = 9 * COIN;
+        } else if (nHeight > 25000  && nHeight <= 50000)  { nSubsidy = 8 * COIN;
+        } else if (nHeight > 50000  && nHeight <= 75000)  { nSubsidy = 7 * COIN;
+        } else if (nHeight > 75000  && nHeight <= 100000) { nSubsidy = 6 * COIN;
+        } else if (nHeight > 100000 && nHeight <= 125000) { nSubsidy = 5 * COIN;
+        } else if (nHeight > 125000 && nHeight <= 150000) { nSubsidy = 4 * COIN;
+        } else if (nHeight > 150000 && nHeight <= 175000) { nSubsidy = 3 * COIN;
+        } else if (nHeight > 175000 && nHeight <= 200000) { nSubsidy = 2 * COIN;
+        } else if (nHeight > 200000 && nHeight <= 225000) { nSubsidy = 1 * COIN;
+        } else if (nHeight > 225000)                      { nSubsidy = 0.5 * COIN; }
+    } else {
+        if (nHeight == 0) { nSubsidy = 0 * COIN;
+        } else if (nHeight == 1)                            { nSubsidy = 7500000 * COIN;    // Supply for swap (SCC 2x -> SCC 3x) 
+        } else if (nHeight > 1       && nHeight <= 5000)    { nSubsidy = 0.1 * COIN;        // Fair start ~7 days (5000/720 = 6,944444)
+        } else if (nHeight > 5000    && nHeight <= 250000)  { nSubsidy = 9 * COIN;          // 1 year
+        } else if (nHeight > 250000  && nHeight <= 500000)  { nSubsidy = 8 * COIN;
+        } else if (nHeight > 500000  && nHeight <= 750000)  { nSubsidy = 7 * COIN;
+        } else if (nHeight > 750000  && nHeight <= 1000000) { nSubsidy = 6 * COIN;
+        } else if (nHeight > 1000000 && nHeight <= 1250000) { nSubsidy = 5 * COIN;
+        } else if (nHeight > 1250000 && nHeight <= 1500000) { nSubsidy = 4 * COIN;
+        } else if (nHeight > 1500000 && nHeight <= 1750000) { nSubsidy = 3 * COIN;
+        } else if (nHeight > 1750000 && nHeight <= 2000000) { nSubsidy = 2 * COIN;
+        } else if (nHeight > 2000000 && nHeight <= 2250000) { nSubsidy = 1 * COIN;
+        } else if (nHeight > 2250000)                       { nSubsidy = 0.5 * COIN; }      // Until max supply (18.000.000 SCC) reached in ~10 years / at block ~2 500 000
+    }
 
     return nSubsidy;
 }
