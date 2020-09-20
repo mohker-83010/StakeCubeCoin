@@ -89,7 +89,7 @@ UniValue mnsync(const JSONRPCRequest& request)
 
     std::string strMode = request.params[0].get_str();
 
-    if(strMode == "status") {
+    if (strMode == "status") {
         UniValue objStatus(UniValue::VOBJ);
         objStatus.pushKV("AssetID", masternodeSync.GetAssetID());
         objStatus.pushKV("AssetName", masternodeSync.GetAssetName());
@@ -97,17 +97,16 @@ UniValue mnsync(const JSONRPCRequest& request)
         objStatus.pushKV("Attempt", masternodeSync.GetAttempt());
         objStatus.pushKV("IsBlockchainSynced", masternodeSync.IsBlockchainSynced());
         objStatus.pushKV("IsSynced", masternodeSync.IsSynced());
-        objStatus.pushKV("IsFailed", masternodeSync.IsFailed());
         return objStatus;
     }
 
-    if(strMode == "next")
+    if (strMode == "next")
     {
         masternodeSync.SwitchToNextAsset(*g_connman);
         return "sync updated to " + masternodeSync.GetAssetName();
     }
 
-    if(strMode == "reset")
+    if (strMode == "reset")
     {
         masternodeSync.Reset();
         masternodeSync.SwitchToNextAsset(*g_connman);
