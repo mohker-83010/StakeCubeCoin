@@ -50,9 +50,7 @@ namespace GUIUtil
         /* Transaction list -- bare address (without label) */
         BAREADDRESS,
         /* Transaction list -- TX status decoration - open until date */
-        TX_STATUS_OPENUNTILDATE,
-        /* Transaction list -- TX status decoration - offline */
-        TX_STATUS_OFFLINE,
+        TX_STATUS_OPENUNTILDATE,    
         /* Transaction list -- TX status decoration - danger, tx needs attention */
         TX_STATUS_DANGER,
         /* Transaction list -- TX status decoration - LockedByInstantSend color */
