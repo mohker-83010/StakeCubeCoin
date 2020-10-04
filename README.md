@@ -1,77 +1,71 @@
-Dash Core staging tree 0.17
-===========================
-
-`master:` [![Build Status](https://travis-ci.org/dashpay/dash.svg?branch=master)](https://travis-ci.org/dashpay/dash) `develop:` [![Build Status](https://travis-ci.org/dashpay/dash.svg?branch=develop)](https://travis-ci.org/dashpay/dash/branches)
-
-https://www.dash.org
+StakeCubeCoin [SCC] integration/staging tree
+========================================
 
 
-What is Dash?
+![StakeCube Dark Logo](https://stakecube.net/app/download/media/logo-dark.png)
+
+SCC is the coin of [StakeCube.net](https://stakecube.net/)
+
+Brief Specifications
+--------------------
+
+* Coin Name:       StakeCubeCoin
+* Coin Ticker:     SCC
+* Consensus:       PoW/MN (x11)
+* MN Collateral:   1000 SCC
+* Block reward:    0.5 - 9 SCC
+* MN reward:       70%
+* PoW reward:      30%
+* Block spacing:   120 Seconds
+* Premine:         250000 SCC (1.4%)
+* Total supply:    18 Million
+* RPC port:        39999
+* P2P/MN port:     40000
+
+
+What is StakeCubeCoin (SCC)?
+-------------------------
+
+StakeCubeCoin is a fork of the Dash codebase; which uses a combination of x11-PoW and Deterministic Masternodes to secure the cryptocurrency's network and blockchain.
+
+The StakeCubeCoin blockchain is further secured by Masternodes, which enforce ChainLocks and InstantSend for an extremely fast, secure network monitored by 1000s of Masternodes, constantly producing secure quorums.
+
+The first consecutive blocks contain the coins allocated for the user coin swap (From the MUE codebase), destined for holders of the previous PoS/MN version of StakeCubeCoin.
+
+7.5 million (7,500,000) SCC was reserved in the first mined block for swapping user coins.
+
+A total of 1,000 SCC is required to run a masternode;
+
+
+Issue Tracker
+------------
+
+The integrated GitHub issue tracker is used for this project. Upon running into an issue, please submit it [here](https://github.com/stakecube/StakeCubeCoin/issues).
+
+
+Documentation
 -------------
 
-Dash is an experimental digital currency that enables instant, private
-payments to anyone, anywhere in the world. Dash uses peer-to-peer technology
-to operate with no central authority: managing transactions and issuing money
-are carried out collectively by the network. Dash Core is the name of the open
-source software which enables the use of this currency.
+The documentation is a work-in-progress. It is located in the doc folder and [the wiki pages](https://github.com/stakecube/StakeCubeCoin/wiki).
 
-For more information, as well as an immediately useable, binary version of
-the Dash Core software, see https://www.dash.org/get-dash/.
+
+Wiki
+----
+
+The answers to most technical questions can be found in the official SCC wiki:
+https://github.com/stakecube/StakeCubeCoin/wiki
+
+This wiki will be updated with SCC specifications, docs, manuals and FAQs.
+
+Additionally, you may join the StakeCube discord server for direct support from the StakeCube team and community:
+https://discord.gg/uej2FZd
 
 
 License
 -------
 
-Dash Core is released under the terms of the MIT license. See [COPYING](COPYING) for more
-information or see https://opensource.org/licenses/MIT.
+StakeCubeCoin is released under the terms of the MIT license.
+See COPYING for more information or see https://opensource.org/licenses/MIT.
 
-Development Process
--------------------
+StakeCubeCoin is derived from code developed by the Dashpay team (https://github.com/dashpay/dash) and where possible, have left all copyright notices and trademarks untouched.
 
-The `master` branch is meant to be stable. Development is normally done in separate branches.
-[Tags](https://github.com/dashpay/dash/tags) are created to indicate new official,
-stable release versions of Dash Core.
-
-The contribution workflow is described in [CONTRIBUTING.md](CONTRIBUTING.md).
-
-Testing
--------
-
-Testing and code review is the bottleneck for development; we get more pull
-requests than we can review and test on short notice. Please be patient and help out by testing
-other people's pull requests, and remember this is a security-critical project where any mistake might cost people
-lots of money.
-
-### Automated Testing
-
-Developers are strongly encouraged to write [unit tests](src/test/README.md) for new code, and to
-submit new unit tests for old code. Unit tests can be compiled and run
-(assuming they weren't disabled in configure) with: `make check`. Further details on running
-and extending unit tests can be found in [/src/test/README.md](/src/test/README.md).
-
-There are also [regression and integration tests](/test), written
-in Python, that are run automatically on the build server.
-These tests can be run (if the [test dependencies](/test) are installed) with: `test/functional/test_runner.py`
-
-The Travis CI system makes sure that every pull request is built for Windows, Linux, and OS X, and that unit/sanity tests are run automatically.
-
-### Manual Quality Assurance (QA) Testing
-
-Changes should be tested by somebody other than the developer who wrote the
-code. This is especially important for large or high-risk changes. It is useful
-to add a test plan to the pull request description if testing the changes is
-not straightforward.
-
-Translations
-------------
-
-Changes to translations as well as new translations can be submitted to
-[Dash Core's Transifex page](https://www.transifex.com/projects/p/dash/).
-
-Translations are periodically pulled from Transifex and merged into the git repository. See the
-[translation process](doc/translation_process.md) for details on how this works.
-
-**Important**: We do not accept translation changes as GitHub pull requests because the next
-pull from Transifex would automatically overwrite them again.
-
-Translators should also follow the [forum](https://www.dash.org/forum/topic/dash-worldwide-collaboration.88/).
