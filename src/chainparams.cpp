@@ -286,8 +286,8 @@ public:
         consensus.nPowTargetSpacing = 2 * 60; // 2 minutes
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
-        consensus.nPowKGWHeight = 400000U; // unused
-        consensus.nPowDGWHeight = 400000U; // unused
+        consensus.nPowKGWHeight = 1;
+        consensus.nPowDGWHeight = 2;
         consensus.nRuleChangeActivationThreshold = 1512; // 75% of 2016
         consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
 
@@ -357,7 +357,7 @@ public:
         nDefaultPort = 40000;
         nPruneAfterHeight = 100000;
 
-        genesis = CreateGenesisBlock(1601541673, 473144, 0x1e0ffff0, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1601898626, 433472, 0x1e0ffff0, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
 
         if (regenerate) {
@@ -381,7 +381,7 @@ public:
             }
         }
         else {
-            assert(consensus.hashGenesisBlock == uint256S("0x00000e01b00903a526c92be6798e7793af3a82ec792022d7bcb8eb36126e9005"));
+            assert(consensus.hashGenesisBlock == uint256S("0x000001112c342e635d0e48db15505392e74b2cab902dff9243ade44939da5b47"));
             assert(genesis.hashMerkleRoot == uint256S("0x361a210a8b44c51526bd08d50cfe2d272d9b1e65837d6e4c456d327106334e48"));
         }
 
@@ -430,7 +430,7 @@ public:
         nPoolNewMaxParticipants = 20;
         nFulfilledRequestExpireTime = 60*60; // fulfilled requests expire in 1 hour
 
-        vSporkAddresses = {"sckHKKeSq91gzzLhbrSQGQ7UPahNt3xxYn"};
+        vSporkAddresses = {"sJbcSRccZQfmgjeW28uEEh9PswngZj1RXb"};
         nMinSporkKeys = 1;
         fBIP9CheckMasternodesUpgraded = true;
 
@@ -443,13 +443,13 @@ public:
          */
         checkpointData = { // TODO: Set more checkpoints in future release
             {
-                {0, uint256S("0x00000e01b00903a526c92be6798e7793af3a82ec792022d7bcb8eb36126e9005")},
-                {1, uint256S("0x0000085513c98ffd27f94caf41affd09509f5f513500ece2b81b03dafe1ce952")},
+                {0, uint256S("0x000001112c342e635d0e48db15505392e74b2cab902dff9243ade44939da5b47")},
+                {1, uint256S("0x00000a3d1238b01735d6cce4f161c0f8afbf4e9da0d0a8b2cfe72e5714084dd7")},
             }
         };
 
         chainTxData = ChainTxData{
-            1601588183, // * UNIX timestamp of last known number of transactions (Block 1)
+            1601901100, // * UNIX timestamp of last known number of transactions (Block 1)
             1,          // * total number of transactions between genesis and that timestamp
                         //   (the tx=... number in the SetBestChain debug.log lines)
             0.01        // * estimated number of transactions per second after that timestamp
@@ -493,8 +493,8 @@ public:
         consensus.nPowTargetSpacing = 0.5 * 60; // 30 seconds
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
-        consensus.nPowKGWHeight = 400000U; // unused
-        consensus.nPowDGWHeight = 400000U; // unused
+        consensus.nPowKGWHeight = 1;
+        consensus.nPowDGWHeight = 2;
         consensus.nRuleChangeActivationThreshold = 1512; // 75% of 2016
         consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
 
