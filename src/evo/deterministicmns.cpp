@@ -1130,7 +1130,8 @@ bool CDeterministicMNManager::UpgradeDBIfNeeded()
     }
 
     if (evoDb.GetRawDB().Exists(EVODB_BEST_BLOCK)) {
-        return true;
+        // should have no records
+        return evoDb.IsEmpty();
     }
 
     // Removing the old EVODB_BEST_BLOCK value early results in older version to crash immediately, even if the upgrade
