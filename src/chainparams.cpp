@@ -291,16 +291,15 @@ public:
         consensus.nRuleChangeActivationThreshold = 1512; // 75% of 2016
         consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
 
-        // StakeCubeCoin : We do not use BudgetPayments, Superblocks and Governance
-        consensus.nBudgetPaymentsStartBlock = INT_MAX; // 2147483647 (= never | requires hardfork to enable)
-        consensus.nBudgetPaymentsCycleBlocks = 21600; // ~(60*24*30)/2
+        // StakeCubeCoin: We do not *yet* use BudgetPayments, Superblocks and Governance
+        consensus.nBudgetPaymentsStartBlock   = INT_MAX; // 2147483647 (= never | requires hardfork to enable)
+        consensus.nBudgetPaymentsCycleBlocks  = 21600; // ~(60*24*30)/2
         consensus.nBudgetPaymentsWindowBlocks = 100;
-        consensus.nSuperblockStartBlock = INT_MAX; // 2147483647 (= never | requires hardfork to enable)
-        consensus.nSuperblockStartHash = uint256();
-        consensus.nSuperblockCycle = 21600; // ~(60*24*30)/2
-        consensus.nGovernanceMinQuorum = 10;
-        consensus.nGovernanceFilterElements = 20000;
-        // End StakeCubeCoin
+        consensus.nSuperblockStartBlock       = 15000; // Hardfork date to re-enable SuperBlocks logic (controlling via spork instead of chain-params)
+        consensus.nSuperblockStartHash        = uint256();
+        consensus.nSuperblockCycle            = 21600; // ~(60*24*30)/2
+        consensus.nGovernanceMinQuorum        = 10;
+        consensus.nGovernanceFilterElements   = 20000;
 
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit         = 28;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime  = 1199145601; // Jan 1st, 2008
@@ -498,16 +497,15 @@ public:
         consensus.nRuleChangeActivationThreshold = 1512; // 75% of 2016
         consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
 
-        // StakeCubeCoin : We do not use BudgetPayments, Superblocks and Governance
-        consensus.nBudgetPaymentsStartBlock = INT_MAX; // 2147483647 (= never | requires hardfork to enable)
-        consensus.nBudgetPaymentsCycleBlocks = 21600; // ~(60*24*30)/2
+        // StakeCubeCoin: We do not use BudgetPayments, Superblocks and Governance
+        consensus.nBudgetPaymentsStartBlock   = INT_MAX; // 2147483647 (= never | requires hardfork to enable)
+        consensus.nBudgetPaymentsCycleBlocks  = 21600;   // ~(60*24*30)/2
         consensus.nBudgetPaymentsWindowBlocks = 100;
-        consensus.nSuperblockStartBlock = INT_MAX; // 2147483647 (= never | requires hardfork to enable)
-        consensus.nSuperblockStartHash = uint256();
-        consensus.nSuperblockCycle = 21600; // ~(60*24*30)/2
-        consensus.nGovernanceMinQuorum = 10;
-        consensus.nGovernanceFilterElements = 20000;
-        // End StakeCubeCoin
+        consensus.nSuperblockStartBlock       = 300;     // Activated by the time we have enough Masternodes online
+        consensus.nSuperblockStartHash        = uint256();
+        consensus.nSuperblockCycle            = 21600;  // ~(60*24*30)/2
+        consensus.nGovernanceMinQuorum        = 10;
+        consensus.nGovernanceFilterElements   = 20000;
 
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit         = 28;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime  = 1199145601; // Jan 1st, 2008
