@@ -295,7 +295,7 @@ public:
         consensus.nBudgetPaymentsStartBlock   = INT_MAX; // 2147483647 (= never | requires hardfork to enable)
         consensus.nBudgetPaymentsCycleBlocks  = 21600; // ~(60*24*30)/2
         consensus.nBudgetPaymentsWindowBlocks = 100;
-        consensus.nSuperblockStartBlock       = 15000; // Hardfork date to re-enable SuperBlocks logic (controlling via spork instead of chain-params)
+        consensus.nSuperblockStartBlock       = 10000; // Hardfork date to re-enable SuperBlocks logic (controlling via spork instead of chain-params)
         consensus.nSuperblockStartHash        = uint256();
         consensus.nSuperblockCycle            = 21600; // ~(60*24*30)/2
         consensus.nGovernanceMinQuorum        = 10;
