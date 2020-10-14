@@ -155,7 +155,7 @@ bool IsBlockValueValid(const CBlock& block, int nBlockHeight, CAmount blockRewar
 
 bool IsBlockPayeeValid(const CTransaction& txNew, int nBlockHeight, CAmount blockReward)
 {
-    if(fDisableGovernance) {
+    if (fDisableGovernance) {
         //there is no budget data to use to check anything, let's just accept the longest chain
         LogPrint(BCLog::MNPAYMENTS, "%s -- WARNING: Not enough data, skipping block payee checks\n", __func__);
         return true;
@@ -163,10 +163,9 @@ bool IsBlockPayeeValid(const CTransaction& txNew, int nBlockHeight, CAmount bloc
 
     // we are still using budgets, but we have no data about them anymore,
     // we can only check masternode payments
-
     const Consensus::Params& consensusParams = Params().GetConsensus();
 
-    if(nBlockHeight < consensusParams.nSuperblockStartBlock) {
+    if (nBlockHeight < consensusParams.nSuperblockStartBlock) {
         // NOTE: old budget system is disabled since 12.1 and we should never enter this branch
         // anymore when sync is finished (on mainnet). We have no old budget data but these blocks
         // have tons of confirmations and can be safely accepted without payee verification
@@ -176,10 +175,9 @@ bool IsBlockPayeeValid(const CTransaction& txNew, int nBlockHeight, CAmount bloc
 
     // superblocks started
     // SEE IF THIS IS A VALID SUPERBLOCK
-
-    if(sporkManager.IsSporkActive(SPORK_9_SUPERBLOCKS_ENABLED)) {
-        if(CSuperblockManager::IsSuperblockTriggered(nBlockHeight)) {
-            if(CSuperblockManager::IsValid(txNew, nBlockHeight, blockReward)) {
+    if (sporkManager.IsSporkActive(SPORK_9_SUPERBLOCKS_ENABLED)) {
+        if (CSuperblockManager::IsSuperblockTriggered(nBlockHeight)) {
+            if (CSuperblockManager::IsValid(txNew, nBlockHeight, blockReward)) {
                 LogPrint(BCLog::GOBJECT, "%s -- Valid superblock at height %d: %s", __func__, nBlockHeight, txNew.ToString()); /* Continued */
                 // continue validation, should also pay MN
             } else {
@@ -196,7 +194,7 @@ bool IsBlockPayeeValid(const CTransaction& txNew, int nBlockHeight, CAmount bloc
     }
 
     // Check for correct masternode payment
-    if(CMasternodePayments::IsTransactionValid(txNew, nBlockHeight, blockReward)) {
+    if (CMasternodePayments::IsTransactionValid(txNew, nBlockHeight, blockReward)) {
         LogPrint(BCLog::MNPAYMENTS, "%s -- Valid masternode payment at height %d: %s", __func__, nBlockHeight, txNew.ToString()); /* Continued */
         return true;
     }

@@ -144,6 +144,7 @@ struct Params {
     int nBudgetPaymentsStartBlock;
     int nBudgetPaymentsCycleBlocks;
     int nBudgetPaymentsWindowBlocks;
+    /** Block height and hash at which SuperBlocks become active */
     int nSuperblockStartBlock;
     uint256 nSuperblockStartHash;
     int nSuperblockCycle; // in blocks
