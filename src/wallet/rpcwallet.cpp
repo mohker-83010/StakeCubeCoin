@@ -22,6 +22,7 @@
 #include <txmempool.h>
 #include <util.h>
 #include <utilmoneystr.h>
+#include <utilstrencodings.h>
 #include <validation.h>
 #include <wallet/coincontrol.h>
 #include <wallet/wallet.h>
@@ -418,6 +419,96 @@ static void SendMoney(CWallet * const pwallet, const CTxDestination &address, CA
         strError = strprintf("Error: The transaction was rejected! Reason given: %s", FormatStateMessage(state));
         throw JSONRPCError(RPC_WALLET_ERROR, strError);
     }
+}
+
+void BurnMoney(CWallet * const pwallet, const CScript scriptPubKeyIn, CAmount nValue, CWalletTx& wtxNew)
+{
+    // Check amount
+    if (nValue <= 0)
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid amount");
+
+    if (nValue > pwallet->GetBalance())
+        throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, "Insufficient funds");
+
+    std::string strError;
+    if (pwallet->IsLocked()) {
+        strError = "Error: Wallet locked, unable to create transaction!";
+        LogPrintf("BurnMoney() : %s", strError);
+        throw JSONRPCError(RPC_WALLET_ERROR, strError);
+    }
+
+    // Get scriptPubKey
+    CScript scriptPubKey = scriptPubKeyIn;
+
+    // Create and send the transaction
+    CReserveKey reservekey(pwallet);
+    CCoinControl coin_control;
+    coin_control.UsePrivateSend(false);
+    coin_control.m_confirm_target = 1;
+    CAmount nFeeRequired;
+    std::vector<CRecipient> vecSend;
+    int nChangePosRet = 1;
+    CRecipient recipient = {scriptPubKey, nValue, false};
+    vecSend.push_back(recipient);
+    if (!pwallet->CreateTransaction(vecSend, wtxNew, reservekey, nFeeRequired, nChangePosRet, strError, coin_control, true)) {
+        if (nValue + nFeeRequired > pwallet->GetBalance())
+            strError = strprintf("Error: This transaction requires a transaction fee of at least %s because of its amount, complexity, or use of recently received funds!", FormatMoney(nFeeRequired));
+        LogPrintf("BurnMoney() : %s\n", strError);
+        throw JSONRPCError(RPC_WALLET_ERROR, strError);
+    }
+
+    CValidationState state;
+    if (!pwallet->CommitTransaction(wtxNew, reservekey, g_connman.get(), state)) {
+        strError = strprintf("Error: The transaction was rejected! Reason given: %s", FormatStateMessage(state));
+        throw JSONRPCError(RPC_WALLET_ERROR, strError);
+    }
+}
+
+UniValue burn(const JSONRPCRequest& request)
+{
+    CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
+    if (!EnsureWalletIsAvailable(pwallet, request.fHelp)) {
+        return NullUniValue;
+    }
+    
+    EnsureWalletIsUnlocked(pwallet);
+
+    if (request.fHelp || request.params.size() < 1 || request.params.size() > 2)
+        throw std::runtime_error(
+            "This command is used to burn SCC and optionally write custom data into the burn transaction, \n"
+            "<amount> is real and is rounded to the nearest sat (ex: 0.00000001).\n"
+            "You may use 0 as the <amount> to skip a specific burn amount, for only writing data into the chain."
+            + HelpRequiringPassphrase(pwallet));
+
+    CScript scriptPubKey;
+
+    if (request.params.size() > 1) {
+        std::vector<unsigned char> data;
+        if (request.params[1].get_str().size() > 0) {
+            // Parse plain-text string into HEX, then HEX to HEX-Vector
+            data = ParseHexV(HexStr(request.params[1].get_str()), "data");
+            // Ensure the data is under the maximum OP_RETURN relay (Minus overhead)
+            if (data.size() > nMaxDatacarrierBytes - 3)
+                throw std::runtime_error("Your custom data (worth " + std::to_string(data.size()) + " bytes) exceeds the maximum relay of " + std::to_string(nMaxDatacarrierBytes - 3) + " bytes!");
+        } else {
+            // Empty data is valid, but cannot have a zero-value burn
+            if (request.params[0].get_real() == 0)
+                throw std::runtime_error("You cannot create a zero-value burn transaction without custom data!");
+        }
+        scriptPubKey = CScript() << OP_RETURN << data;
+    } else {
+        if (request.params[0].get_real() == 0)
+            throw std::runtime_error("You cannot create a zero-value burn transaction without custom data!");
+        scriptPubKey = CScript() << OP_RETURN;
+    }
+
+    // Amount (Use <amount> parameter if it's larger than 0, else, use a single sat)
+    int64_t nAmount = AmountFromValue(request.params[0].get_real() > 0 ? request.params[0] : 0.00000001);
+    CTxDestination address1;
+    CWalletTx wtx;
+    BurnMoney(pwallet, scriptPubKey, nAmount, wtx);
+
+    return wtx.GetHash().GetHex();
 }
 
 UniValue sendtoaddress(const JSONRPCRequest& request)
@@ -3503,6 +3594,7 @@ static const CRPCCommand commands[] =
     { "hidden",             "resendwallettransactions", &resendwallettransactions, {} },
     { "wallet",             "abandontransaction",       &abandontransaction,       {"txid"} },
     { "wallet",             "abortrescan",              &abortrescan,              {} },
+    { "wallet",             "burn",                     &burn,                     {"amount","text"} },
     { "wallet",             "addmultisigaddress",       &addmultisigaddress,       {"nrequired","keys","account"} },
     { "wallet",             "backupwallet",             &backupwallet,             {"destination"} },
     { "wallet",             "dumpprivkey",              &dumpprivkey,              {"address"}  },
