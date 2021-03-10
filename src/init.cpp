@@ -2008,6 +2008,8 @@ bool AppInitMain()
                         strLoadError = _("Corrupted block database detected");
                         break;
                     }
+
+                    ResetBlockFailureFlags(nullptr);
                 }
             } catch (const std::exception& e) {
                 LogPrintf("%s\n", e.what());
