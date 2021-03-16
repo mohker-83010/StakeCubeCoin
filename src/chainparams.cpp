@@ -452,14 +452,26 @@ public:
                 {4000,  uint256S("0x000000000000a0d6d6e7be5e1a6168bc08ebea36394a840d7b3a9a0708f37748")},
                 {5000,  uint256S("0x0000000000005c73a59d7203ab44f08ea043d9ee1a8440d148435f17a8672c0d")},
                 {6000,  uint256S("0x000000000000031f3adff1ae73100663cce2ff648efe82b52466394132089e35")},
-                {6438,  uint256S("0x000000000000037f22b857984bbd520af912cbf24975c35815710bcb0d3ebb47")}
+                {6438,  uint256S("0x000000000000037f22b857984bbd520af912cbf24975c35815710bcb0d3ebb47")},
+                // The StakeCube Protocol (SCP) update
+                {10000, uint256S("00000000000002f5a3089ba562fb42939756818b4e47f53fad042f6f734c5410")},
+                {20000, uint256S("00000000000002742de1ac4e218ccc68dba52976a07d46b4aaf2b8a09b27c020")},
+                {30000, uint256S("000000000000038eb91445c2125d2fd5fbb6dadf5d9f07d3b55b310446773c5d")},
+                {40000, uint256S("00000000000021718c8fc16f28e997b51cbe54cdc3a98f9b547143a41f8e85f6")},
+                {50000, uint256S("0000000000001f3bd04b01d0f38274ea3b7c8baaa0fd2c61644cf268b8c19327")},
+                {60000, uint256S("000000000000045f81b9960f202b6b01ee84c14c6f3a3f40b87208cb22c0352d")},
+                {70000, uint256S("00000000000006d174130512a8b18e24a74fde341d4dcf1cd99c9e8a388e9059")},
+                {80000, uint256S("0000000000002c62043577372f6d94aebd38960f8692809d2a06889e2299f3c9")},
+                {90000, uint256S("00000000000004f7d71ff39d4d8deb45a353e6b9d2f2fc6050fe78d634ccc78a")},
+                {100000, uint256S("00000000000011e634d6f2351351cfdecce8210c4fd319b2b0a57fede65548b2")},
+                {105302, uint256S("00000000000006000db09a96981ed231c3bdabb6b12f2b113a6ae4a5af2cf292")}
                 // Some future update...
             }
         };
 
         chainTxData = ChainTxData{
-            1601901100, // * UNIX timestamp of last known number of transactions (Block 1)
-            1,          // * total number of transactions between genesis and that timestamp
+            1615889778, // * UNIX timestamp of last known number of transactions (Block 1)
+            178606,          // * total number of transactions between genesis and that timestamp
                         //   (the tx=... number in the SetBestChain debug.log lines)
             0.01        // * estimated number of transactions per second after that timestamp
         };
