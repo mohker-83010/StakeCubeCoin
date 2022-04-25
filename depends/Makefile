@@ -34,7 +34,6 @@ BASE_CACHE ?= $(BASEDIR)/built
 SDK_PATH ?= $(BASEDIR)/SDKs
 NO_QT ?=
 NO_PROTOBUF ?=
-NO_OPENSSL ?=
 NO_WALLET ?=
 NO_ZMQ ?=
 NO_UPNP ?=
@@ -139,7 +138,6 @@ natpmp_packages_$(NO_NATPMP) = $(natpmp_packages)
 zmq_packages_$(NO_ZMQ) = $(zmq_packages)
 
 protobuf_packages_$(NO_PROTOBUF) = $(protobuf_packages)
-openssl_packages_$(NO_OPENSSL) = $(openssl_packages)
 
 packages += $($(host_arch)_$(host_os)_packages) $($(host_os)_packages) $(qt_packages_) $(wallet_packages_) $(upnp_packages_) $(natpmp_packages_)
 native_packages += $($(host_arch)_$(host_os)_native_packages) $($(host_os)_native_packages)
@@ -147,10 +145,6 @@ native_packages += $($(host_arch)_$(host_os)_native_packages) $($(host_os)_nativ
 ifneq ($(protobuf_packages_),)
 native_packages += $(protobuf_native_packages)
 packages += $(protobuf_packages)
-endif
-
-ifneq ($(openssl_packages_),)
-packages += $(openssl_packages)
 endif
 
 ifneq ($(zmq_packages_),)

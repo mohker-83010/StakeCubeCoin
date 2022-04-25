@@ -28,9 +28,7 @@
 #include <QObject>
 #include <QTest>
 
-#if USE_OPENSSL
 #include <openssl/ssl.h>
-#endif
 
 #if defined(QT_STATICPLUGIN)
 #include <QtPlugin>
