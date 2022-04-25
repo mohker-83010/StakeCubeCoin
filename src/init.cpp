@@ -1711,7 +1711,11 @@ bool AppInitMain(InitInterfaces& interfaces)
     CScheduler::Function serviceLoop = std::bind(&CScheduler::serviceQueue, &scheduler);
     threadGroup.create_thread(std::bind(&TraceThread<CScheduler::Function>, "scheduler", serviceLoop));
 
-    GetMainSignals().RegisterBackgroundSignalScheduler(scheduler);
+    // Gather some entropy once per minute.
+    node.scheduler->scheduleEvery([]{
+        RandAddPeriodic();
+    }, 60000);
+
     GetMainSignals().RegisterWithMempoolSignals(mempool);
 
     tableRPC.InitPlatformRestrictions();
