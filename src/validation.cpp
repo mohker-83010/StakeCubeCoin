@@ -1860,26 +1860,13 @@ static ThresholdConditionCache warningcache[VERSIONBITS_NUM_BITS] GUARDED_BY(cs_
 static unsigned int GetBlockScriptFlags(const CBlockIndex* pindex, const Consensus::Params& consensusparams) EXCLUSIVE_LOCKS_REQUIRED(cs_main) {
     AssertLockHeld(cs_main);
 
-    // P2SH is enforced in SCC since block 1
-    unsigned int flags = SCRIPT_VERIFY_P2SH;
+    // P2SH, BIP66 (DERSIG) and BIP65 (CLTV) is enforced in SCC since block 1
+    unsigned int flags = SCRIPT_VERIFY_P2SH | SCRIPT_VERIFY_DERSIG | SCRIPT_VERIFY_CHECKLOCKTIMEVERIFY;
 
-    // Enforce the DERSIG (BIP66) rule
-    flags |= SCRIPT_VERIFY_DERSIG;
-
-    // Enforce CHECKLOCKTIMEVERIFY (BIP65) rule
-    flags |= SCRIPT_VERIFY_CHECKLOCKTIMEVERIFY;
-
-    // Start enforcing BIP68 (sequence locks) and BIP112 (CHECKSEQUENCEVERIFY) using versionbits logic.
-    if (VersionBitsState(pindex->pprev, consensusparams, Consensus::DEPLOYMENT_CSV, versionbitscache) == ThresholdState::ACTIVE) {
+    // Start enforcing BIP68 (sequence locks), BIP147 (CSV) and DIP20 (opcodes upgrade) after the 'softfork fast-track' height
+    if (pindex->pprev->nHeight + 1 >= consensusparams.SoftforkFasttrackHeight) {
         flags |= SCRIPT_VERIFY_CHECKSEQUENCEVERIFY;
-    }
-
-    // Start enforcing BIP147 (NULLDUMMY) rule using versionbits logic.
-    if (VersionBitsState(pindex->pprev, consensusparams, Consensus::DEPLOYMENT_BIP147, versionbitscache) == ThresholdState::ACTIVE) {
         flags |= SCRIPT_VERIFY_NULLDUMMY;
-    }
-
-    if (VersionBitsState(pindex->pprev, consensusparams, Consensus::DEPLOYMENT_DIP0020, versionbitscache) == ThresholdState::ACTIVE) {
         flags |= SCRIPT_ENABLE_DIP0020_OPCODES;
     }
 
