@@ -976,7 +976,7 @@ public:
     //    unless it loads a bloom filter.
     bool fRelayTxes GUARDED_BY(cs_filter){false};
     bool fSentAddr{false};
-    // If 'true' this node will be disconnected on CMasternodeMan::ProcessMasternodeConnections()
+    // If 'true' this node will be disconnected on CMasternodeMan::DoMaintenance()
     std::atomic<bool> m_masternode_connection{false};
     // If 'true' this node will be disconnected after MNAUTH
     std::atomic<bool> m_masternode_probe_connection{false};
