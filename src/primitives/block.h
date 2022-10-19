@@ -117,6 +117,7 @@ public:
         PREV_BLOCK_HASH = (1 << 3),
         TIMESTAMP = (1 << 4),
         NBITS = (1 << 5),
+
     };
 
     inline bool IsCompressed(Flag flag) const
@@ -219,7 +220,13 @@ struct CompressibleBlockHeader : CBlockHeader {
         if (!obj.bit_field.IsCompressed(CompressedHeaderBitField::Flag::NBITS)) {
             READWRITE(obj.nBits);
         }
-        READWRITE(obj.nNonce);
+        if(IsProgPow()) {
+            READWRITE(obj.nNonce64);
+            READWRITE(obj.mix_hash);
+            READWRITE(obj.nHeight);
+        } else {
+            READWRITE(obj.nNonce);
+        }
     }
 
     void Compress(const std::vector<CompressibleBlockHeader>& previous_blocks, std::list<int32_t>& last_unique_versions);
