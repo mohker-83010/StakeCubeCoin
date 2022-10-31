@@ -18,4 +18,4 @@ The following keys may be used to communicate sensitive information to developer
 |------|-------------|
 | JSKitty | 94B7 5BC9 7F63 051C6 0857 7AC3 28CA 5D97 1C1 44DD |
 
-You can import a key by running the following command with that individual’s fingerprint: `gpg --recv-keys "<fingerprint>"` Ensure that you put quotes around fingerprints containing spaces.
+You can import a key by running the following command with that individual’s fingerprint: `gpg --keyserver hkps://keys.openpgp.org --recv-keys "<fingerprint>"` Ensure that you put quotes around fingerprints containing spaces.
