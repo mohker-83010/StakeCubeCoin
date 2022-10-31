@@ -102,7 +102,7 @@ bool WalletInit::ParameterInteraction() const
 
         return true;
     } else if (gArgs.IsArgSet("-masternodeblsprivkey")) {
-        return InitError(_("You can not start a masternode with wallet enabled.").translated);
+        return InitError(_("You can not start a masternode with wallet enabled."));
     }
 
     const bool is_multiwallet = gArgs.GetArgs("-wallet").size() > 1;
@@ -120,7 +120,7 @@ bool WalletInit::ParameterInteraction() const
     // -zapwallettxes implies a rescan
     if (zapwallettxes) {
         if (is_multiwallet) {
-            return InitError(strprintf("%s is only allowed with a single wallet file", "-zapwallettxes"));
+            return InitError(strprintf(Untranslated("%s is only allowed with a single wallet file"), "-zapwallettxes"));
         }
         if (gArgs.SoftSetBoolArg("-rescan", true)) {
             LogPrintf("%s: parameter interaction: -zapwallettxes enabled -> setting -rescan=1\n", __func__);
@@ -130,36 +130,36 @@ bool WalletInit::ParameterInteraction() const
     int rescan_mode = gArgs.GetArg("-rescan", 0);
     if (rescan_mode < 0 || rescan_mode > 2) {
         LogPrintf("%s: Warning: incorrect -rescan mode, falling back to default value.\n", __func__);
-        InitWarning(_("Incorrect -rescan mode, falling back to default value").translated);
+        InitWarning(_("Incorrect -rescan mode, falling back to default value"));
         gArgs.ForceRemoveArg("-rescan");
     }
 
     if (is_multiwallet) {
         if (gArgs.GetBoolArg("-upgradewallet", false)) {
-            return InitError(strprintf("%s is only allowed with a single wallet file", "-upgradewallet"));
+            return InitError(strprintf(_("%s is only allowed with a single wallet file"), "-upgradewallet"));
         }
     }
 
     if (gArgs.GetBoolArg("-sysperms", false))
-        return InitError("-sysperms is not allowed in combination with enabled wallet functionality");
+        return InitError(Untranslated("-sysperms is not allowed in combination with enabled wallet functionality"));
     if (gArgs.GetArg("-prune", 0) && gArgs.GetBoolArg("-rescan", false))
-        return InitError(_("Rescans are not possible in pruned mode. You will need to use -reindex which will download the whole blockchain again.").translated);
+        return InitError(_("Rescans are not possible in pruned mode. You will need to use -reindex which will download the whole blockchain again."));
 
     if (gArgs.IsArgSet("-walletbackupsdir")) {
         if (!fs::is_directory(gArgs.GetArg("-walletbackupsdir", ""))) {
-            InitWarning(strprintf(_("Warning: incorrect parameter %s, path must exist! Using default path.").translated, "-walletbackupsdir"));
+            InitWarning(strprintf(_("Warning: incorrect parameter %s, path must exist! Using default path."), "-walletbackupsdir"));
             gArgs.ForceRemoveArg("-walletbackupsdir");
         }
     }
 
     if (gArgs.IsArgSet("-hdseed") && IsHex(gArgs.GetArg("-hdseed", "not hex")) && (gArgs.IsArgSet("-mnemonic") || gArgs.IsArgSet("-mnemonicpassphrase"))) {
-        InitWarning(strprintf(_("Warning: can't use %s and %s together, will prefer %s").translated, "-hdseed", "-mnemonic/-mnemonicpassphrase", "-hdseed"));
+        InitWarning(strprintf(_("Warning: can't use %s and %s together, will prefer %s"), "-hdseed", "-mnemonic/-mnemonicpassphrase", "-hdseed"));
         gArgs.ForceRemoveArg("-mnemonic");
         gArgs.ForceRemoveArg("-mnemonicpassphrase");
     }
 
     if (gArgs.GetArg("-coinjoindenomshardcap", DEFAULT_COINJOIN_DENOMS_HARDCAP) < gArgs.GetArg("-coinjoindenomsgoal", DEFAULT_COINJOIN_DENOMS_GOAL)) {
-        return InitError(strprintf(_("%s can't be lower than %s").translated, "-coinjoindenomshardcap", "-coinjoindenomsgoal"));
+        return InitError(strprintf(_("%s can't be lower than %s"), "-coinjoindenomshardcap", "-coinjoindenomsgoal"));
     }
 
     return true;
