@@ -79,6 +79,7 @@
 #include <llmq/blockprocessor.h>
 #include <llmq/init.h>
 #include <llmq/quorums.h>
+#include <llmq/dkgsessionmgr.h>
 #include <llmq/signing.h>
 #include <llmq/snapshot.h>
 #include <llmq/utils.h>
@@ -2333,6 +2334,7 @@ bool AppInitMain(InitInterfaces& interfaces)
 
     if (fMasternodeMode) {
         scheduler.scheduleEvery(std::bind(&CCoinJoinServer::DoMaintenance, std::ref(coinJoinServer), std::ref(*g_connman)), 1 * 1000);
+        scheduler.scheduleEvery(std::bind(&llmq::CDKGSessionManager::CleanupOldContributions, std::ref(*llmq::quorumDKGSessionManager)), 60 * 60 * 1000);
     }
 
     if (gArgs.GetBoolArg("-statsenabled", DEFAULT_STATSD_ENABLE)) {
