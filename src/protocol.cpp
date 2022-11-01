@@ -169,7 +169,9 @@ const static std::string allNetMessageTypes[] = {
     NetMsgType::ISLOCK,
     NetMsgType::ISDLOCK,
     NetMsgType::MNAUTH,
-};
+    NetMsgType::GETHEADERS2,
+    NetMsgType::SENDHEADERS2,
+    NetMsgType::HEADERS2};
 const static std::vector<std::string> allNetMessageTypesVec(allNetMessageTypes, allNetMessageTypes+ARRAYLEN(allNetMessageTypes));
 
 CMessageHeader::CMessageHeader(const MessageStartChars& pchMessageStartIn)
@@ -350,6 +352,7 @@ static std::string serviceFlagToStr(size_t bit)
     case NODE_BLOOM:           return "BLOOM";
     case NODE_COMPACT_FILTERS: return "COMPACT_FILTERS";
     case NODE_NETWORK_LIMITED: return "NETWORK_LIMITED";
+    case NODE_HEADERS_COMPRESSED: return "HEADERS_COMPRESSED";
     // Not using default, so we get warned when a case is missing
     }
 

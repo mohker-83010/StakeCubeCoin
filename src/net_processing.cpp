@@ -31,6 +31,7 @@
 #include <util/strencodings.h>
 #include <util/validation.h>
 
+#include <list>
 #include <memory>
 
 #include <spork.h>
@@ -299,6 +300,8 @@ struct CNodeState {
     bool fPreferredDownload;
     //! Whether this peer wants invs or headers (when possible) for block announcements.
     bool fPreferHeaders;
+    //! Whether this peer wants invs or compressed headers (when possible) for block announcements.
+    bool fPreferHeadersCompressed;
     //! Whether this peer wants invs or cmpctblocks (when possible) for block announcements.
     bool fPreferHeaderAndIDs;
     //! Whether this peer will send us cmpctblocks if we request them
@@ -419,6 +422,7 @@ struct CNodeState {
         nBlocksInFlightValidHeaders = 0;
         fPreferredDownload = false;
         fPreferHeaders = false;
+        fPreferHeadersCompressed = false;
         fPreferHeaderAndIDs = false;
         fProvidesHeaderAndIDs = false;
         fSupportsDesiredCmpctVersion = false;
@@ -2705,7 +2709,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& msg_type, CDataStrea
         // We send this to non-NODE NETWORK peers as well, because even
         // non-NODE NETWORK peers can announce blocks (such as pruning
         // nodes)
-        connman->PushMessage(pfrom, msgMaker.Make(NetMsgType::SENDHEADERS));
+        connman->PushMessage(pfrom, msgMaker.Make((pfrom->nServices & NODE_HEADERS_COMPRESSED) ? NetMsgType::SENDHEADERS2 : NetMsgType::SENDHEADERS));
 
         if (pfrom->CanRelay()) {
             // Tell our peer we are willing to provide version-1 cmpctblocks
@@ -3162,20 +3166,6 @@ bool static ProcessMessage(CNode* pfrom, const std::string& msg_type, CDataStrea
                 return compressible_header;
             });
         }
-        // pindex can be nullptr either if we sent ::ChainActive().Tip() OR
-        // if our peer has ::ChainActive().Tip() (and thus we are sending an empty
-        // headers message). In both cases it's safe to update
-        // pindexBestHeaderSent to be our tip.
-        //
-        // It is important that we simply reset the BestHeaderSent value here,
-        // and not max(BestHeaderSent, newHeaderSent). We might have announced
-        // the currently-being-connected tip using a compact block, which
-        // resulted in the peer sending a headers request, which we respond to
-        // without the new block. By resetting the BestHeaderSent, we ensure we
-        // will re-announce the new block via headers (or compact blocks again)
-        // in the SendMessages logic.
-        nodestate->pindexBestHeaderSent = pindex ? pindex : ::ChainActive().Tip();
-        connman->PushMessage(pfrom, msgMaker.Make(NetMsgType::HEADERS, vHeaders));
         return true;
     }
 
@@ -3377,7 +3367,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& msg_type, CDataStrea
         if (!LookupBlockIndex(cmpctblock.header.hashPrevBlock)) {
             // Doesn't connect (or is genesis), instead of DoSing in AcceptBlockHeader, request deeper headers
             if (!::ChainstateActive().IsInitialBlockDownload())
-                connman->PushMessage(pfrom, msgMaker.Make(NetMsgType::GETHEADERS, ::ChainActive().GetLocator(pindexBestHeader), uint256()));
+                connman->PushMessage(pfrom, msgMaker.Make((pfrom->nServices & NODE_HEADERS_COMPRESSED) ? NetMsgType::GETHEADERS2 : NetMsgType::GETHEADERS, ::ChainActive().GetLocator(pindexBestHeader), uint256()));
             return true;
         }
 
@@ -4491,7 +4481,7 @@ bool PeerLogicValidation::SendMessages(CNode* pto)
             // add all to the inv queue.
             LOCK(pto->cs_inventory);
             std::vector<CBlock> vHeaders;
-            bool fRevertToInv = ((!state.fPreferHeaders &&
+            bool fRevertToInv = ((!state.fPreferHeaders && !state.fPreferHeadersCompressed &&
                                  (!state.fPreferHeaderAndIDs || pto->vBlockHashesToAnnounce.size() > 1)) ||
                                  pto->vBlockHashesToAnnounce.size() > MAX_BLOCKS_TO_ANNOUNCE);
             const CBlockIndex *pBestIndex = nullptr; // last header queued for delivery
@@ -4575,6 +4565,20 @@ bool PeerLogicValidation::SendMessages(CNode* pto)
                         CBlockHeaderAndShortTxIDs cmpctblock(block);
                         connman->PushMessage(pto, msgMaker.Make(NetMsgType::CMPCTBLOCK, cmpctblock));
                     }
+                    state.pindexBestHeaderSent = pBestIndex;
+                } else if (state.fPreferHeadersCompressed) {
+                    std::vector<CompressibleBlockHeader> vHeadersCompressed;
+                    std::list<int32_t> last_unique_versions;
+
+                    // Save other headers compressed
+                    std::for_each(vHeaders.cbegin(), vHeaders.cend(), [&vHeadersCompressed, &last_unique_versions](const auto& block) {
+                        CompressibleBlockHeader compressible_header{block.GetBlockHeader()};
+                        compressible_header.Compress(vHeadersCompressed, last_unique_versions);
+                        vHeadersCompressed.push_back(compressible_header);
+                    });
+
+                    // Push message to peer
+                    connman->PushMessage(pto, msgMaker.Make(NetMsgType::HEADERS2, vHeadersCompressed));
                     state.pindexBestHeaderSent = pBestIndex;
                 } else if (state.fPreferHeaders) {
                     if (vHeaders.size() > 1) {
