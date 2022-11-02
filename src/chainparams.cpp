@@ -823,7 +823,6 @@ public:
     {
         consensus.llmqTypeInstantSend = llmqType;
     }
-    void UpdateDevnetLLMQInstantSendFromArgs(const ArgsManager& args);
 
     /**
      * Allows modifying the LLMQ type for InstantSend (DIP0024).
