@@ -1476,7 +1476,8 @@ void CSigSharesManager::SignPendingSigShares()
     for (const auto& [pQuorum, id, msgHash] : v) {
         auto opt_sigShare = CreateSigShare(pQuorum, id, msgHash);
 
-        if (sigShare.sigShare.Get().IsValid()) {
+        if (opt_sigShare.has_value() && opt_sigShare->sigShare.Get().IsValid()) {
+            auto sigShare = *opt_sigShare;
 
             ProcessSigShare(sigShare, *g_connman, pQuorum);
 
