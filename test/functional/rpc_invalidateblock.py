@@ -7,7 +7,12 @@
 import time
 
 from test_framework.test_framework import BitcoinTestFramework
-from test_framework.util import assert_equal, connect_nodes, wait_until
+from test_framework.address import ADDRESS_BCRT1_UNSPENDABLE_DESCRIPTOR
+from test_framework.util import (
+    assert_equal,
+    connect_nodes,
+    wait_until,
+)
 
 class InvalidateTest(BitcoinTestFramework):
     def set_test_params(self):
@@ -87,6 +92,30 @@ class InvalidateTest(BitcoinTestFramework):
         self.restart_node(1, extra_args=["-checkblocks=5"])
         wait_until(lambda: self.nodes[1].getblockcount() == newheight + 20)
         assert_equal(tip, self.nodes[1].getbestblockhash())
+
+        self.log.info("Verify that we reconsider all ancestors as well")
+        blocks = self.nodes[1].generatetodescriptor(10, ADDRESS_BCRT1_UNSPENDABLE_DESCRIPTOR)
+        assert_equal(self.nodes[1].getbestblockhash(), blocks[-1])
+        # Invalidate the two blocks at the tip
+        self.nodes[1].invalidateblock(blocks[-1])
+        self.nodes[1].invalidateblock(blocks[-2])
+        assert_equal(self.nodes[1].getbestblockhash(), blocks[-3])
+        # Reconsider only the previous tip
+        self.nodes[1].reconsiderblock(blocks[-1])
+        # Should be back at the tip by now
+        assert_equal(self.nodes[1].getbestblockhash(), blocks[-1])
+
+        self.log.info("Verify that we reconsider all descendants")
+        blocks = self.nodes[1].generatetodescriptor(10, ADDRESS_BCRT1_UNSPENDABLE_DESCRIPTOR)
+        assert_equal(self.nodes[1].getbestblockhash(), blocks[-1])
+        # Invalidate the two blocks at the tip
+        self.nodes[1].invalidateblock(blocks[-2])
+        self.nodes[1].invalidateblock(blocks[-4])
+        assert_equal(self.nodes[1].getbestblockhash(), blocks[-5])
+        # Reconsider only the previous tip
+        self.nodes[1].reconsiderblock(blocks[-4])
+        # Should be back at the tip by now
+        assert_equal(self.nodes[1].getbestblockhash(), blocks[-1])
 
 
 if __name__ == '__main__':

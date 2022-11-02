@@ -1026,7 +1026,7 @@ void CSigSharesManager::CollectSigSharesToAnnounce(std::unordered_map<NodeId, st
         auto quorumKey = std::make_pair(sigShare->getLlmqType(), sigShare->getQuorumHash());
         auto it = quorumNodesMap.find(quorumKey);
         if (it == quorumNodesMap.end()) {
-            auto nodeIds = g_connman->GetMasternodeQuorumNodes(quorumKey.first, quorumKey.second);
+            auto nodeIds = connman.GetMasternodeQuorumNodes(quorumKey.first, quorumKey.second);
             it = quorumNodesMap.emplace(std::piecewise_construct, std::forward_as_tuple(quorumKey), std::forward_as_tuple(nodeIds.begin(), nodeIds.end())).first;
         }
 
@@ -1083,7 +1083,7 @@ bool CSigSharesManager::SendMessages()
         return session->sendSessionId;
     };
 
-    std::vector<CNode*> vNodesCopy = g_connman->CopyNodeVector(CConnman::FullyConnectedOnly);
+    std::vector<CNode*> vNodesCopy = connman.CopyNodeVector(CConnman::FullyConnectedOnly);
 
     {
         LOCK(cs);
@@ -1122,13 +1122,13 @@ bool CSigSharesManager::SendMessages()
                          sigSesAnn.buildSignHash().ToString(), sigSesAnn.getSessionId(), pnode->GetId());
                 msgs.emplace_back(sigSesAnn);
                 if (msgs.size() == MAX_MSGS_CNT_QSIGSESANN) {
-                    g_connman->PushMessage(pnode, msgMaker.Make(NetMsgType::QSIGSESANN, msgs));
+                    connman.PushMessage(pnode, msgMaker.Make(NetMsgType::QSIGSESANN, msgs));
                     msgs.clear();
                     didSend = true;
                 }
             }
             if (!msgs.empty()) {
-                g_connman->PushMessage(pnode, msgMaker.Make(NetMsgType::QSIGSESANN, msgs));
+                connman.PushMessage(pnode, msgMaker.Make(NetMsgType::QSIGSESANN, msgs));
                 didSend = true;
             }
         }
@@ -1141,13 +1141,13 @@ bool CSigSharesManager::SendMessages()
                          signHash.ToString(), inv.ToString(), pnode->GetId());
                 msgs.emplace_back(inv);
                 if (msgs.size() == MAX_MSGS_CNT_QGETSIGSHARES) {
-                    g_connman->PushMessage(pnode, msgMaker.Make(NetMsgType::QGETSIGSHARES, msgs));
+                    connman.PushMessage(pnode, msgMaker.Make(NetMsgType::QGETSIGSHARES, msgs));
                     msgs.clear();
                     didSend = true;
                 }
             }
             if (!msgs.empty()) {
-                g_connman->PushMessage(pnode, msgMaker.Make(NetMsgType::QGETSIGSHARES, msgs));
+                connman.PushMessage(pnode, msgMaker.Make(NetMsgType::QGETSIGSHARES, msgs));
                 didSend = true;
             }
         }
@@ -1160,7 +1160,7 @@ bool CSigSharesManager::SendMessages()
                 LogPrint(BCLog::LLMQ_SIGS, "CSigSharesManager::SendMessages -- QBSIGSHARES signHash=%s, inv={%s}, node=%d\n",
                          signHash.ToString(), inv.ToInvString(), pnode->GetId());
                 if (totalSigsCount + inv.sigShares.size() > MAX_MSGS_TOTAL_BATCHED_SIGS) {
-                    g_connman->PushMessage(pnode, msgMaker.Make(NetMsgType::QBSIGSHARES, msgs));
+                    connman.PushMessage(pnode, msgMaker.Make(NetMsgType::QBSIGSHARES, msgs));
                     msgs.clear();
                     totalSigsCount = 0;
                     didSend = true;
@@ -1170,7 +1170,7 @@ bool CSigSharesManager::SendMessages()
 
             }
             if (!msgs.empty()) {
-                g_connman->PushMessage(pnode, msgMaker.Make(NetMsgType::QBSIGSHARES, std::move(msgs)));
+                connman.PushMessage(pnode, msgMaker.Make(NetMsgType::QBSIGSHARES, std::move(msgs)));
                 didSend = true;
             }
         }
@@ -1183,13 +1183,13 @@ bool CSigSharesManager::SendMessages()
                          signHash.ToString(), inv.ToString(), pnode->GetId());
                 msgs.emplace_back(inv);
                 if (msgs.size() == MAX_MSGS_CNT_QSIGSHARESINV) {
-                    g_connman->PushMessage(pnode, msgMaker.Make(NetMsgType::QSIGSHARESINV, msgs));
+                    connman.PushMessage(pnode, msgMaker.Make(NetMsgType::QSIGSHARESINV, msgs));
                     msgs.clear();
                     didSend = true;
                 }
             }
             if (!msgs.empty()) {
-                g_connman->PushMessage(pnode, msgMaker.Make(NetMsgType::QSIGSHARESINV, msgs));
+                connman.PushMessage(pnode, msgMaker.Make(NetMsgType::QSIGSHARESINV, msgs));
                 didSend = true;
             }
         }
@@ -1202,20 +1202,20 @@ bool CSigSharesManager::SendMessages()
                          sigShare.GetSignHash().ToString(), pnode->GetId());
                 msgs.emplace_back(std::move(sigShare));
                 if (msgs.size() == MAX_MSGS_SIG_SHARES) {
-                    g_connman->PushMessage(pnode, msgMaker.Make(NetMsgType::QSIGSHARE, msgs));
+                    connman.PushMessage(pnode, msgMaker.Make(NetMsgType::QSIGSHARE, msgs));
                     msgs.clear();
                     didSend = true;
                 }
             }
             if (!msgs.empty()) {
-                g_connman->PushMessage(pnode, msgMaker.Make(NetMsgType::QSIGSHARE, msgs));
+                connman.PushMessage(pnode, msgMaker.Make(NetMsgType::QSIGSHARE, msgs));
                 didSend = true;
             }
         }
     }
 
     // looped through all nodes, release them
-    g_connman->ReleaseNodeVector(vNodesCopy);
+    connman.ReleaseNodeVector(vNodesCopy);
 
     return didSend;
 }
@@ -1341,7 +1341,7 @@ void CSigSharesManager::Cleanup()
             nodeStatesToDelete.emplace(nodeId);
         }
     }
-    g_connman->ForEachNode([&nodeStatesToDelete](const CNode* pnode) {
+    connman.ForEachNode([&nodeStatesToDelete](const CNode* pnode) {
         nodeStatesToDelete.erase(pnode->GetId());
     });
 
@@ -1441,7 +1441,7 @@ void CSigSharesManager::WorkThreadMain()
 
         RemoveBannedNodeStates();
         fMoreWork |= quorumSigningManager->ProcessPendingRecoveredSigs();
-        fMoreWork |= ProcessPendingSigShares(*g_connman);
+        fMoreWork |= ProcessPendingSigShares(connman);
         SignPendingSigShares();
 
         if (GetTimeMillis() - lastSendTime > 100) {
@@ -1479,7 +1479,7 @@ void CSigSharesManager::SignPendingSigShares()
         if (opt_sigShare.has_value() && opt_sigShare->sigShare.Get().IsValid()) {
             auto sigShare = *opt_sigShare;
 
-            ProcessSigShare(sigShare, *g_connman, pQuorum);
+            ProcessSigShare(sigShare, connman, pQuorum);
 
             if (CLLMQUtils::IsAllMembersConnectedEnabled(pQuorum->params.type)) {
                 LOCK(cs);
