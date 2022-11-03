@@ -301,7 +301,7 @@ void CQuorumManager::EnsureQuorumConnections(const Consensus::LLMQParams& llmqPa
     }
     for (const auto& quorumHash : connmanQuorumsToDelete) {
         LogPrint(BCLog::LLMQ, "CQuorumManager::%s -- removing masternodes quorum connections for quorum %s:\n", __func__, quorumHash.ToString());
-        g_connman->RemoveMasternodeQuorumNodes(llmqParams.type, quorumHash);
+        connman.RemoveMasternodeQuorumNodes(llmqParams.type, quorumHash);
     }
 }
 
