@@ -127,12 +127,13 @@ static bool GenerateBlock(CBlock& block, uint64_t& max_tries, unsigned int& extr
         LOCK(cs_main);
         IncrementExtraNonce(&block, ::ChainActive().Tip(), extra_nonce);
     }
+    CBlock *pblock = &pblocktemplate->block;
 
     CChainParams chainparams(Params());
     static const int nInnerLoopCount = 0x10000;
 
     if (pblock->IsProgPow()) {
-        while (nMaxTries > 0 && pblock->nNonce64 < nInnerLoopCount) {
+        while (max_tries > 0 && pblock->nNonce64 < nInnerLoopCount) {
             uint256 mix_hash;
             auto final_hash{progpow_hash_full(pblock->GetProgPowHeader(), mix_hash)};
             if (CheckProofOfWork(final_hash, pblock->nBits, Params().GetConsensus()))
@@ -141,7 +142,7 @@ static bool GenerateBlock(CBlock& block, uint64_t& max_tries, unsigned int& extr
                 break;
             }
             ++pblock->nNonce64;
-            --nMaxTries;
+            --max_tries;
         }
     } else {
         while (max_tries > 0 && block.nNonce < std::numeric_limits<uint32_t>::max() && !CheckProofOfWork(block.GetPoWHash(block.nHeight), block.nBits, chainparams.GetConsensus()) && !ShutdownRequested()) {
@@ -182,7 +183,6 @@ UniValue generateBlocks(const CTxMemPool& mempool, std::shared_ptr<CReserveScrip
         std::unique_ptr<CBlockTemplate> pblocktemplate(BlockAssembler(mempool, Params()).CreateNewBlock(coinbaseScript->reserveScript));
         if (!pblocktemplate.get())
             throw JSONRPCError(RPC_INTERNAL_ERROR, "Couldn't create new block");
-        CBlock *pblock = &pblocktemplate->block;
     
         uint256 block_hash;
         if (!GenerateBlock(*pblock, nMaxTries, nExtraNonce, block_hash)) {
@@ -713,7 +713,6 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
             && !masternodeSync.IsSynced()
             && CSuperblock::IsValidBlockHeight(::ChainActive().Height() + 1))
                 throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, PACKAGE_NAME "is syncing with network...");
-    }
 
     static unsigned int nTransactionsUpdatedLast;
 
