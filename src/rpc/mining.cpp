@@ -127,21 +127,20 @@ static bool GenerateBlock(CBlock& block, uint64_t& max_tries, unsigned int& extr
         LOCK(cs_main);
         IncrementExtraNonce(&block, ::ChainActive().Tip(), extra_nonce);
     }
-    CBlock *pblock = &pblocktemplate->block;
 
     CChainParams chainparams(Params());
     static const int nInnerLoopCount = 0x10000;
 
-    if (pblock->IsProgPow()) {
-        while (max_tries > 0 && pblock->nNonce64 < nInnerLoopCount) {
+    if (block.IsProgPow()) {
+        while (max_tries > 0 && block.nNonce64 < nInnerLoopCount) {
             uint256 mix_hash;
-            auto final_hash{progpow_hash_full(pblock->GetProgPowHeader(), mix_hash)};
-            if (CheckProofOfWork(final_hash, pblock->nBits, Params().GetConsensus()))
+            auto final_hash{progpow_hash_full(block.GetProgPowHeader(), mix_hash)};
+            if (CheckProofOfWork(final_hash, block.nBits, Params().GetConsensus()))
             {
-                pblock->mix_hash = mix_hash;
+                block.mix_hash = mix_hash;
                 break;
             }
-            ++pblock->nNonce64;
+            ++block.nNonce64;
             --max_tries;
         }
     } else {
