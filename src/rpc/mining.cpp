@@ -180,11 +180,11 @@ UniValue generateBlocks(const CTxMemPool& mempool, std::shared_ptr<CReserveScrip
     UniValue blockHashes(UniValue::VARR);
     while (nHeight < nHeightEnd && !ShutdownRequested())
     {
-        CBlock *pblock = &pblocktemplate->block;
         std::unique_ptr<CBlockTemplate> pblocktemplate(BlockAssembler(mempool, Params()).CreateNewBlock(coinbaseScript->reserveScript));
         if (!pblocktemplate.get())
             throw JSONRPCError(RPC_INTERNAL_ERROR, "Couldn't create new block");
-    
+
+        CBlock *pblock = &pblocktemplate->block;
         uint256 block_hash;
         if (!GenerateBlock(*pblock, nMaxTries, nExtraNonce, block_hash)) {
             break;
