@@ -219,7 +219,7 @@ struct CompressibleBlockHeader : CBlockHeader {
         if (!obj.bit_field.IsCompressed(CompressedHeaderBitField::Flag::NBITS)) {
             READWRITE(obj.nBits);
         }
-        if(IsProgPow()) {
+        if(CBlockHeader::IsProgPow()) {
             READWRITE(obj.nNonce64);
         } else {
             READWRITE(obj.nNonce);
