@@ -10,7 +10,7 @@ Checks LLMQs Quorum Rotation
 
 '''
 import time
-from test_framework.test_framework import DashTestFramework
+from test_framework.test_framework import SCCTestFramework
 from test_framework.util import (
     assert_equal,
     assert_greater_than_or_equal,
@@ -29,10 +29,10 @@ def extract_quorum_members(quorum_info):
     return [d['proTxHash'] for d in quorum_info["members"]]
 
 
-class LLMQQuorumRotationTest(DashTestFramework):
+class LLMQQuorumRotationTest(SCCTestFramework):
     def set_test_params(self):
-        self.set_dash_test_params(16, 15, fast_dip3_enforcement=True)
-        self.set_dash_llmq_test_params(4, 4)
+        self.set_scc_test_params(16, 15, fast_dip3_enforcement=True)
+        self.set_scc_llmq_test_params(4, 4)
 
     def run_test(self):
 

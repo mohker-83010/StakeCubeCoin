@@ -83,7 +83,7 @@ EXTENDED_SCRIPTS = [
 BASE_SCRIPTS = [
     # Scripts that are run by default.
     # Longest test should go first, to favor running tests in parallel
-    'feature_dip3_deterministicmns.py', # NOTE: needs dash_hash to pass
+    'feature_dip3_deterministicmns.py', # NOTE: needs SCC_hash to pass
     'feature_llmq_data_recovery.py',
     'feature_fee_estimation.py',
     'wallet_hd.py',
@@ -91,7 +91,7 @@ BASE_SCRIPTS = [
     # vv Tests less than 5m vv
     'mining_getblocktemplate_longpoll.py', # FIXME: "socket.error: [Errno 54] Connection reset by peer" on my Mac, same as https://github.com/bitcoin/bitcoin/issues/6651
     'feature_maxuploadtarget.py',
-    'feature_block.py', # NOTE: needs dash_hash to pass
+    'feature_block.py', # NOTE: needs SCC_hash to pass
     'rpc_fundrawtransaction.py',
     'rpc_fundrawtransaction_hd.py',
     'wallet_multiwallet.py --usecli',
@@ -105,20 +105,20 @@ BASE_SCRIPTS = [
     'wallet_dump.py',
     'wallet_listtransactions.py',
     'feature_multikeysporks.py',
-    'feature_llmq_signing.py', # NOTE: needs dash_hash to pass
-    'feature_llmq_signing.py --spork21', # NOTE: needs dash_hash to pass
-    'feature_llmq_chainlocks.py', # NOTE: needs dash_hash to pass
-    'feature_llmq_rotation.py', # NOTE: needs dash_hash to pass
-    'feature_llmq_connections.py', # NOTE: needs dash_hash to pass
-    'feature_llmq_simplepose.py', # NOTE: needs dash_hash to pass
-    'feature_llmq_is_cl_conflicts.py', # NOTE: needs dash_hash to pass
-    'feature_llmq_is_migration.py', # NOTE: needs dash_hash to pass
-    'feature_llmq_is_retroactive.py', # NOTE: needs dash_hash to pass
-    'feature_llmq_dkgerrors.py', # NOTE: needs dash_hash to pass
-    'feature_dip4_coinbasemerkleroots.py', # NOTE: needs dash_hash to pass
+    'feature_llmq_signing.py', # NOTE: needs SCC_hash to pass
+    'feature_llmq_signing.py --spork21', # NOTE: needs SCC_hash to pass
+    'feature_llmq_chainlocks.py', # NOTE: needs SCC_hash to pass
+    'feature_llmq_rotation.py', # NOTE: needs SCC_hash to pass
+    'feature_llmq_connections.py', # NOTE: needs SCC_hash to pass
+    'feature_llmq_simplepose.py', # NOTE: needs SCC_hash to pass
+    'feature_llmq_is_cl_conflicts.py', # NOTE: needs SCC_hash to pass
+    'feature_llmq_is_migration.py', # NOTE: needs SCC_hash to pass
+    'feature_llmq_is_retroactive.py', # NOTE: needs SCC_hash to pass
+    'feature_llmq_dkgerrors.py', # NOTE: needs SCC_hash to pass
+    'feature_dip4_coinbasemerkleroots.py', # NOTE: needs SCC_hash to pass
     # vv Tests less than 60s vv
-    'p2p_sendheaders.py', # NOTE: needs dash_hash to pass
-    'p2p_sendheaders_compressed.py', # NOTE: needs dash_hash to pass
+    'p2p_sendheaders.py', # NOTE: needs SCC_hash to pass
+    'p2p_sendheaders_compressed.py', # NOTE: needs SCC_hash to pass
     'wallet_zapwallettxes.py',
     'wallet_importmulti.py',
     'mempool_limit.py',
@@ -218,7 +218,7 @@ BASE_SCRIPTS = [
     'wallet_resendwallettransactions.py',
     'wallet_fallbackfee.py',
     'feature_minchainwork.py',
-    'p2p_unrequested_blocks.py', # NOTE: needs dash_hash to pass
+    'p2p_unrequested_blocks.py', # NOTE: needs SCC_hash to pass
     'feature_shutdown.py',
     'rpc_coinjoin.py',
     'rpc_masternode.py',
@@ -280,7 +280,7 @@ def main():
     parser.add_argument('--filter', help='filter scripts to run by regular expression')
     args, unknown_args = parser.parse_known_args()
 
-    # args to be passed on always start with two dashes; tests are the remaining unknown args
+    # args to be passed on always start with two SCCes; tests are the remaining unknown args
     tests = [arg for arg in unknown_args if arg[:2] != "--"]
     passon_args = [arg for arg in unknown_args if arg[:2] == "--"]
 

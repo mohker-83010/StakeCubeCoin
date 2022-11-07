@@ -6,7 +6,7 @@
 #define BITCOIN_CRYPTO_MUHASH_H
 
 #if defined(HAVE_CONFIG_H)
-#include <config/dash-config.h>
+#include <config/scc-config.h>
 #endif
 
 #include <serialize.h>

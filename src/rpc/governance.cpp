@@ -422,7 +422,7 @@ static UniValue gobject_submit(const JSONRPCRequest& request)
 static void gobject_vote_conf_help(const JSONRPCRequest& request)
 {
     RPCHelpMan{"gobject vote-conf",
-        "Vote on a governance object by masternode configured in dash.conf\n",
+        "Vote on a governance object by masternode configured in stakecubecoin.conf\n",
         {
             {"governance-hash", RPCArg::Type::STR_HEX, RPCArg::Optional::NO, "hash of the governance object"},
             {"vote", RPCArg::Type::STR, RPCArg::Optional::NO, "vote, possible values: [funding|valid|delete|endorsed]"},
