@@ -5030,7 +5030,9 @@ bool CWallet::Verify(interfaces::Chain& chain, const WalletLocation& location, b
     std::unique_ptr<WalletDatabase> database = CreateWalletDatabase(wallet_path);
 
     try {
-        return database->Verify(error_string);
+        if (!database->Verify(error_string)) {
+            return false;
+        }
     } catch (const fs::filesystem_error& e) {
         error_string = Untranslated(strprintf("Error loading wallet %s. %s", location.GetName(), fsbridge::get_filesystem_error_message(e)));
         return false;
@@ -5042,6 +5044,7 @@ bool CWallet::Verify(interfaces::Chain& chain, const WalletLocation& location, b
         return false;
     }
 
+    return true;
 }
 
 std::shared_ptr<CWallet> CWallet::CreateWalletFromFile(interfaces::Chain& chain, const WalletLocation& location, bilingual_str& error, std::vector<bilingual_str>& warnings, uint64_t wallet_creation_flags)
