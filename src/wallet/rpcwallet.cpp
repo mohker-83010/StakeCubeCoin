@@ -387,7 +387,7 @@ UniValue burn(const JSONRPCRequest& request)
                 "\nAs a JSON-RPC call\n"
                 + HelpExampleRpc("burn", "1, \"Hello world!\"")
             },
-        }.Check(request));
+        }.Check(request);
 
     CScript scriptPubKey;
 
