@@ -544,13 +544,12 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
                         {
                             {"support", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "client side supported feature, 'longpoll', 'coinbasetxn', 'coinbasevalue', 'proposal', 'serverlist', 'workid'"},
                         },
-                        },
+                    },
                     {"rules", RPCArg::Type::ARR, /* default_val */ "", "A list of strings",
                         {
                             {"support", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "client side supported softfork deployment"},
                         },
-                        },
-                        "\"template_request\""},
+                    },
                     {"reward_address", RPCArg::Type::OBJ, "", "Address to place into Coinbase",
                         {
                             {"address", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "address for reward in coinbase (meaningful only if block solution is later submitted with pprpcsb)\n}"}
