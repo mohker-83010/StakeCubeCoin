@@ -363,32 +363,31 @@ UniValue burn(const JSONRPCRequest& request)
     CWallet* const pwallet = wallet.get();
     EnsureWalletIsUnlocked(pwallet);
 
-    if (request.fHelp || request.params.size() < 1 || request.params.size() > 2)
-        throw std::runtime_error(
-            RPCHelpMan{"burn",
-                "Create a burn transaction and optionally write custom data into the burn transaction, \n"
-                "<amount> is real and is rounded to the nearest oleg (ex: 0.00000001).\n"
-                "You may use 0 as the <amount> to skip a specific burn amount, for only writing data into the chain.\n"
-                "The maximum size of data that can be included is " + std::to_string(nMaxDatacarrierBytes - 3) + " bytes, post-encoded.\n"
-                + HelpRequiringPassphrase() + "\n",
-                {
-                    {"amount", RPCArg::Type::STR, RPCArg::Optional::NO, "The amount of SCC to burn."},
-                    {"data", RPCArg::Type::STR, RPCArg::Optional::OMITTED_NAMED_ARG, "The optional data to include, up-to " + std::to_string(nMaxDatacarrierBytes - 3) + " bytes."},
-                },
-                RPCResult{
-                    "\"txid\"        (string) The transaction id.\n"
-                },
-                RPCExamples{
-            "\nCreate a simple burn transaction of 1 SCC\n"
-            + HelpExampleCli("burn", "1") +
-            "\nCreate a burn transaction of 1 SCC, with a plaintext message included.\n"
-            + HelpExampleCli("burn", "1 \"Hello world!\"") +
-            "\nCreate a zero-value burn transaction with a plaintext message.\n"
-            + HelpExampleCli("burn", "0 \"Hello world!\"") +
-            "\nAs a JSON-RPC call\n"
-            + HelpExampleRpc("burn", "1, \"Hello world!\"")
-                },
-            }.ToString());
+
+        RPCHelpMan{"burn",
+            "Create a burn transaction and optionally write custom data into the burn transaction, \n"
+            "<amount> is real and is rounded to the nearest oleg (ex: 0.00000001).\n"
+            "You may use 0 as the <amount> to skip a specific burn amount, for only writing data into the chain.\n"
+            "The maximum size of data that can be included is " + std::to_string(nMaxDatacarrierBytes - 3) + " bytes, post-encoded.\n"
+            + HelpRequiringPassphrase() + "\n",
+            {
+                {"amount", RPCArg::Type::STR, RPCArg::Optional::NO, "The amount of SCC to burn."},
+                {"data", RPCArg::Type::STR, RPCArg::Optional::OMITTED_NAMED_ARG, "The optional data to include, up-to " + std::to_string(nMaxDatacarrierBytes - 3) + " bytes."},
+            },
+            RPCResult{
+                RPCResult::Type::STR_HEX, "txid", "The transaction id.\n"
+            },
+            RPCExamples{
+                "\nCreate a simple burn transaction of 1 SCC\n"
+                + HelpExampleCli("burn", "1") +
+                "\nCreate a burn transaction of 1 SCC, with a plaintext message included.\n"
+                + HelpExampleCli("burn", "1 \"Hello world!\"") +
+                "\nCreate a zero-value burn transaction with a plaintext message.\n"
+                + HelpExampleCli("burn", "0 \"Hello world!\"") +
+                "\nAs a JSON-RPC call\n"
+                + HelpExampleRpc("burn", "1, \"Hello world!\"")
+            },
+        }.Check(request));
 
     CScript scriptPubKey;
 
