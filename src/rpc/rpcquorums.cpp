@@ -647,7 +647,7 @@ static void quorum_rotationinfo_help(const JSONRPCRequest& request)
     }.Check(request);
 }
 
-static UniValue quorum_getrotationdata(const JSONRPCRequest& request)
+static UniValue quorum_rotationinfo(const JSONRPCRequest& request)
 {
     quorum_rotationinfo_help(request);
 
