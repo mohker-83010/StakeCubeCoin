@@ -185,8 +185,8 @@ CBlockIndex* LookupBlockIndex(const uint256& hash)
 int GetNHeight(const CBlockHeader &block) {
     CBlockIndex *pindexPrev = NULL;
     int nHeight = 0;
-    BlockMap::iterator it = g_blockman.m_block_index.find(block.hashPrevBlock);
-    if (it != g_blockman.m_block_index.end()) {
+    BlockMap::iterator it = g_chainman.BlockIndex().find(block.hashPrevBlock);
+    if (it != g_chainman.BlockIndex().end()) {
         pindexPrev = (*it).second;
         nHeight = pindexPrev->nHeight + 1;
     }
