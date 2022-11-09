@@ -117,7 +117,7 @@ static UniValue getnetworkhashps(const JSONRPCRequest& request)
 }
 
 #if ENABLE_MINER
-static bool GenerateBlock(CBlock& block, uint64_t& max_tries, unsigned int& extra_nonce, uint256& block_hash)
+static bool GenerateBlock(ChainstateManager& chainman, CBlock& block, uint64_t& max_tries, unsigned int& extra_nonce, uint256& block_hash)
 {
     block_hash.SetNull();
 
@@ -155,14 +155,15 @@ static bool GenerateBlock(CBlock& block, uint64_t& max_tries, unsigned int& extr
     }
 
     std::shared_ptr<const CBlock> shared_pblock = std::make_shared<const CBlock>(block);
-    if (!ProcessNewBlock(chainparams, shared_pblock, true, nullptr))
+    if (!chainman.ProcessNewBlock(chainparams, shared_pblock, true, nullptr)) {
         throw JSONRPCError(RPC_INTERNAL_ERROR, "ProcessNewBlock, block not accepted");
+    }
 
     block_hash = block.GetHash();
     return true;
 }
 
-UniValue generateBlocks(const CTxMemPool& mempool, std::shared_ptr<CReserveScript> coinbaseScript, int nGenerate, uint64_t nMaxTries, bool keepScript)
+UniValue generateBlocks(ChainstateManager& chainman, const CTxMemPool& mempool, std::shared_ptr<CReserveScript> coinbaseScript, int nGenerate, uint64_t nMaxTries, bool keepScript)
 {
     static const int nInnerLoopCount = 0x10000;
     int nHeightEnd = 0;
@@ -183,7 +184,7 @@ UniValue generateBlocks(const CTxMemPool& mempool, std::shared_ptr<CReserveScrip
 
         CBlock *pblock = &pblocktemplate->block;
         uint256 block_hash;
-        if (!GenerateBlock(*pblock, nMaxTries, nExtraNonce, block_hash)) {
+        if (!GenerateBlock(chainman, *pblock, nMaxTries, nExtraNonce, block_hash)) {
             break;
         }
         if (!block_hash.IsNull()) {
@@ -263,12 +264,13 @@ static UniValue generatetodescriptor(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, error);
     }
 
-    const CTxMemPool& mempool = EnsureMemPool();
+    const CTxMemPool& mempool = EnsureMemPool(request.context);
+    ChainstateManager& chainman = EnsureChainman(request.context);
 
     std::shared_ptr<CReserveScript> coinbaseScript = std::make_shared<CReserveScript>();
     coinbaseScript->reserveScript = coinbase_script;
 
-    return generateBlocks(mempool, coinbaseScript, num_blocks, max_tries, false);
+    return generateBlocks(chainman, mempool, coinbaseScript, num_blocks, max_tries, false);
 }
 
 static UniValue generatetoaddress(const JSONRPCRequest& request)
@@ -303,12 +305,13 @@ static UniValue generatetoaddress(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Error: Invalid address");
     }
 
-    const CTxMemPool& mempool = EnsureMemPool();
+    const CTxMemPool& mempool = EnsureMemPool(request.context);
+    ChainstateManager& chainman = EnsureChainman(request.context);
 
     std::shared_ptr<CReserveScript> coinbaseScript = std::make_shared<CReserveScript>();
     coinbaseScript->reserveScript = GetScriptForDestination(destination);
 
-    return generateBlocks(mempool, coinbaseScript, nGenerate, nMaxTries, false);
+    return generateBlocks(chainman, mempool, coinbaseScript, nGenerate, nMaxTries, false);
 }
 
 static UniValue generateblock(const JSONRPCRequest& request)
@@ -350,7 +353,7 @@ static UniValue generateblock(const JSONRPCRequest& request)
         coinbase_script = GetScriptForDestination(destination);
     }
 
-    const CTxMemPool& mempool = EnsureMemPool();
+    const CTxMemPool& mempool = EnsureMemPool(request.context);
 
     std::vector<CTransactionRef> txs;
     const auto raw_txs_or_txids = request.params[1].get_array();
@@ -408,7 +411,7 @@ static UniValue generateblock(const JSONRPCRequest& request)
     uint64_t max_tries{1000000};
     unsigned int extra_nonce{0};
 
-    if (!GenerateBlock(block, max_tries, extra_nonce, block_hash) || block_hash.IsNull()) {
+    if (!GenerateBlock(EnsureChainman(request.context), block, max_tries, extra_nonce, block_hash) || block_hash.IsNull()) {
         throw JSONRPCError(RPC_MISC_ERROR, "Failed to make block.");
     }
 
@@ -455,6 +458,7 @@ static UniValue getmininginfo(const JSONRPCRequest& request)
             }.Check(request);
 
     LOCK(cs_main);
+    const CTxMemPool& mempool = EnsureMemPool(request.context);
 
     UniValue obj(UniValue::VOBJ);
     obj.pushKV("blocks",           (int)::ChainActive().Height());
@@ -494,7 +498,7 @@ static UniValue prioritisetransaction(const JSONRPCRequest& request)
     uint256 hash = ParseHashV(request.params[0].get_str(), "txid");
     CAmount nAmount = request.params[1].get_int64();
 
-    mempool.PrioritiseTransaction(hash, nAmount);
+    EnsureMemPool(request.context).PrioritiseTransaction(hash, nAmount);
     return true;
 }
 
@@ -711,10 +715,11 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
     if (strMode != "template")
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid mode");
 
-    if(!g_rpc_node->connman)
+    NodeContext& node = EnsureNodeContext(request.context);
+    if(!node.connman)
         throw JSONRPCError(RPC_CLIENT_P2P_DISABLED, "Error: Peer-to-peer functionality missing or disabled");
 
-    if (g_rpc_node->connman->GetNodeCount(CConnman::CONNECTIONS_ALL) == 0)
+    if (node.connman->GetNodeCount(CConnman::CONNECTIONS_ALL) == 0)
         throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, PACKAGE_NAME " is not connected!");
 
         if (::ChainstateActive().IsInitialBlockDownload() && ::ChainActive().Height() != 491408)
@@ -727,6 +732,7 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
                 throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, PACKAGE_NAME "is syncing with network...");
 
     static unsigned int nTransactionsUpdatedLast;
+    const CTxMemPool& mempool = EnsureMemPool(request.context);
 
     if (!lpval.isNull())
     {
@@ -750,7 +756,7 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
             nTransactionsUpdatedLastLP = nTransactionsUpdatedLast;
         }
 
-        // Release the wallet and main lock while waiting
+        // Release lock while waiting
         LEAVE_CRITICAL_SECTION(cs_main);
         {
             checktxtime = std::chrono::steady_clock::now() + std::chrono::minutes(1);
@@ -761,6 +767,7 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
                 if (g_best_block_cv.wait_until(lock, checktxtime) == std::cv_status::timeout)
                 {
                     // Timeout: Check transactions for update
+                    // without holding the mempool lock to avoid deadlocks
                     if (mempool.GetTransactionsUpdated() != nTransactionsUpdatedLastLP)
                         break;
                     checktxtime += std::chrono::seconds(10);
@@ -1165,7 +1172,7 @@ static UniValue submitblock(const JSONRPCRequest& request)
     bool new_block;
     submitblock_StateCatcher sc(block.GetHash());
     RegisterValidationInterface(&sc);
-    bool accepted = ProcessNewBlock(Params(), blockptr, /* fForceProcessing */ true, /* fNewBlock */ &new_block);
+    bool accepted = EnsureChainman(request.context).ProcessNewBlock(Params(), blockptr, /* fForceProcessing */ true, /* fNewBlock */ &new_block);
     UnregisterValidationInterface(&sc);
     if (!new_block && accepted) {
         return "duplicate";
@@ -1204,7 +1211,7 @@ static UniValue submitheader(const JSONRPCRequest& request)
     }
 
     CValidationState state;
-    ProcessNewBlockHeaders({h}, state, Params(), /* ppindex */ nullptr, /* first_invalid */ nullptr);
+    EnsureChainman(request.context).ProcessNewBlockHeaders({h}, state, Params(), /* ppindex */ nullptr, /* first_invalid */ nullptr);
     if (state.IsValid()) return NullUniValue;
     if (state.IsError()) {
         throw JSONRPCError(RPC_VERIFY_ERROR, FormatStateMessage(state));
