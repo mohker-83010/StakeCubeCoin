@@ -327,7 +327,6 @@ static CTransactionRef BurnMoney(CWallet * const pwallet, const CScript scriptPu
     // the user could have gotten from another RPC command prior to now
     pwallet->BlockUntilSyncedToCurrentChain();
 
-    auto locked_chain = pwallet->chain().lock();
     LOCK(pwallet->cs_wallet);
 
     if (nValue > pwallet->GetBalance().m_mine_trusted)
@@ -353,7 +352,7 @@ static CTransactionRef BurnMoney(CWallet * const pwallet, const CScript scriptPu
     CRecipient recipient = {scriptPubKey, nValue, false};
     vecSend.push_back(recipient);
     CTransactionRef tx;
-    if (!pwallet->CreateTransaction(*locked_chain, vecSend, tx, nFeeRequired, nChangePosRet, error, coin_control)) {
+    if (!pwallet->CreateTransaction(vecSend, tx, nFeeRequired, nChangePosRet, error, coin_control)) {
         if (nValue + nFeeRequired > pwallet->GetBalance().m_mine_trusted)
             error = strprintf(Untranslated("Error: This transaction requires a transaction fee of at least %s because of its amount, complexity, or use of recently received funds!"), FormatMoney(nFeeRequired));
         LogPrintf("BurnMoney() : %s\n", error.original);
