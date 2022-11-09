@@ -14,8 +14,6 @@
 #include <streams.h>
 #include <sync.h>
 
-#include <unordered_map>
-
 class CNode;
 class CConnman;
 class CValidationState;
