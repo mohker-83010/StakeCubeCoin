@@ -77,7 +77,8 @@ std::shared_ptr<CWallet> GetWalletForJSONRPCRequest(const JSONRPCRequest& reques
         return wallets[0];
     }
     if (request.fHelp) return nullptr;
-    if (!HasWallets()) {
+
+    if (wallets.empty()) {
         throw JSONRPCError(
             RPC_WALLET_NOT_FOUND, "No wallet is loaded. Load a wallet using loadwallet or create a new one with createwallet. (Note: A default wallet is no longer automatically created)");
     }

@@ -50,12 +50,11 @@ struct bilingual_str;
      // shutdown problems/crashes caused by a static initialized internal pointer.
      std::string strPath;
 
- public:
-     std::unique_ptr<DbEnv> dbenv;
-     std::map<std::string, int> mapFileUseCount;
-     std::map<std::string, std::reference_wrapper<BerkeleyDatabase>> m_databases;
-     std::unordered_map<std::string, WalletDatabaseFileId> m_fileids;
-     std::condition_variable_any m_db_in_use;
+public:
+    std::unique_ptr<DbEnv> dbenv;
+    std::map<std::string, std::reference_wrapper<BerkeleyDatabase>> m_databases;
+    std::unordered_map<std::string, WalletDatabaseFileId> m_fileids;
+    std::condition_variable_any m_db_in_use;
 
      BerkeleyEnvironment(const fs::path& env_directory);
      BerkeleyEnvironment();
@@ -66,8 +65,6 @@ struct bilingual_str;
      bool IsInitialized() const { return fDbEnvInit; }
      bool IsDatabaseLoaded(const std::string& db_filename) const { return m_databases.find(db_filename) != m_databases.end(); }
      fs::path Directory() const { return strPath; }
-
-     bool Verify(const std::string& strFile);
 
     bool Open(bilingual_str& error);
     void Close();
@@ -95,14 +92,13 @@ struct bilingual_str;
 
  class BerkeleyBatch;
 
- /** An instance of this class represents one database.
-  * For BerkeleyDB this is just a (env, strFile) tuple.
-  **/
- class BerkeleyDatabase : public WalletDatabase
- {
-     friend class BerkeleyBatch;
- public:
-     BerkeleyDatabase() = delete;
+/** An instance of this class represents one database.
+ * For BerkeleyDB this is just a (env, strFile) tuple.
+ **/
+class BerkeleyDatabase : public WalletDatabase
+{
+public:
+    BerkeleyDatabase() = delete;
 
      /** Create DB handle to real database */
      BerkeleyDatabase(std::shared_ptr<BerkeleyEnvironment> env, std::string filename) :
@@ -163,12 +159,11 @@ struct bilingual_str;
      /** Database pointer. This is initialized lazily and reset during flushes, so it can be null. */
      std::unique_ptr<Db> m_db;
 
-     /** Make a BerkeleyBatch connected to this database */
-     std::unique_ptr<DatabaseBatch> MakeBatch(const char* mode = "r+", bool flush_on_close = true) override;
+    std::string strFile;
 
- private:
-     std::string strFile;
- };
+    /** Make a BerkeleyBatch connected to this database */
+    std::unique_ptr<DatabaseBatch> MakeBatch(const char* mode = "r+", bool flush_on_close = true) override;
+};
 
  /** RAII class that provides access to a Berkeley database */
  class BerkeleyBatch : public DatabaseBatch
@@ -209,9 +204,9 @@ struct bilingual_str;
      BerkeleyEnvironment *env;
      BerkeleyDatabase& m_database;
 
- public:
-     explicit BerkeleyBatch(BerkeleyDatabase& database, const char* pszMode = "r+", bool fFlushOnCloseIn=true);
-     ~BerkeleyBatch() override { Close(); }
+public:
+    explicit BerkeleyBatch(BerkeleyDatabase& database, const char* pszMode = "r+", bool fFlushOnCloseIn=true);
+    ~BerkeleyBatch() override;
 
      BerkeleyBatch(const BerkeleyBatch&) = delete;
      BerkeleyBatch& operator=(const BerkeleyBatch&) = delete;
