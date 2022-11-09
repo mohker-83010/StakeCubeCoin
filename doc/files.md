@@ -48,8 +48,8 @@ The data directory is the default location where the SCC Core files are stored.
 Platform | Data directory path
 ---------|--------------------
 Linux    | `$HOME/.scccore/`
-macOS    | `$HOME/Library/Application Support/Dashcore/`
-Windows  | `%APPDATA%\Dashcore\` <sup>[\[1\]](#note1)</sup>
+macOS    | `$HOME/Library/Application Support/SCCCore/`
+Windows  | `%APPDATA%\SCCCore\` <sup>[\[1\]](#note1)</sup>
 
 2. The non-default data directory path can be specified by `-datadir` option.
 

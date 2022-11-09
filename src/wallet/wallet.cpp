@@ -1304,9 +1304,11 @@ bool CWallet::AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose)
 
 void CWallet::LoadToWallet(CWalletTx& wtxIn)
 {
-    // If wallet doesn't have a chain (e.g wallet-tool), don't bother to update txn.
-    if (HaveChain()) {
-        Optional<int> block_height = chain().getBlockHeight(wtxIn.m_confirm.hashBlock);
+    // If wallet doesn't have a chain (e.g wallet-tool), lock can't be taken.
+    auto locked_chain = LockChain();
+    if (locked_chain) {
+        LockAssertion lock(::cs_main);
+        Optional<int> block_height = locked_chain->getBlockHeight(wtxIn.m_confirm.hashBlock);
         if (block_height) {
             // Update cached block height variable since it not stored in the
             // serialized transaction.
@@ -1493,7 +1495,9 @@ bool CWallet::AbandonTransaction(const uint256& hashTx)
 
 void CWallet::MarkConflicted(const uint256& hashBlock, int conflicting_height, const uint256& hashTx)
 {
-    LOCK(cs_wallet);
+    auto locked_chain = chain().lock();
+    LockAssertion lock(::cs_main);
+    LOCK(cs_wallet); // check WalletBatch::LoadWallet()
 
     int conflictconfirms = (m_last_block_processed_height - conflicting_height + 1) * -1;
     // If number of conflict confirms cannot be determined, this means
@@ -4116,6 +4120,14 @@ void CWallet::CommitTransaction(CTransactionRef tx, mapValue_t mapValue, std::ve
 
 DBErrors CWallet::LoadWallet(bool& fFirstRunRet)
 {
+    // Even if we don't use this lock in this function, we want to preserve
+    // lock order in LoadToWallet if query of chain state is needed to know
+    // tx status. If lock can't be taken (e.g wallet-tool), tx confirmation
+    // status may be not reliable.
+    auto locked_chain = LockChain();
+    if (locked_chain) {
+        LockAssertion lock(::cs_main);
+    }
     LOCK(cs_wallet);
 
     fFirstRunRet = false;
