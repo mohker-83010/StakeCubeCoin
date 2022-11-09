@@ -1110,7 +1110,7 @@ UniValue pprpcsb(const JSONRPCRequest& request)
     // Process block
     submitblock_StateCatcher sc(blockHash);
     RegisterValidationInterface(&sc);
-    bool fAccepted = ProcessNewBlock(Params(), blockptr, true, nullptr);
+    bool fAccepted = EnsureChainman(request.context).ProcessNewBlock(Params(), blockptr, true, nullptr);
     UnregisterValidationInterface(&sc);
     if (fBlockPresent)
     {
