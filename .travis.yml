@@ -218,16 +218,12 @@ after_success:
         - set -o errexit; source .travis/extended_lint_06_script.sh
 
     - stage: test
-      name: 'ARM  [GOAL: install]  [no unit or functional tests]'
+      name: 'ARM  [GOAL: install]  [unit tests, functional tests]'
+      arch: arm64
       env: >-
-        HOST=arm-linux-gnueabihf
-        PACKAGES="python3 g++-arm-linux-gnueabihf"
-        RUN_UNIT_TESTS=false
-        RUN_FUNCTIONAL_TESTS=false
-        GOAL="install"
-        # -Wno-psabi is to disable ABI warnings: "note: parameter passing for argument of type ... changed in GCC 7.1"
-        # This could be removed once the ABI change warning does not show up by default
-        BITCOIN_CONFIG="--enable-glibc-back-compat --enable-reduce-exports CXXFLAGS=-Wno-psabi"
+        FILE_ENV="./ci/test/00_setup_env_arm.sh"
+        QEMU_USER_CMD=""  # Can run the tests natively without qemu
+
     - stage: test
       name: 'S390x  [GOAL: install]  [unit tests, functional tests]'
       arch: s390x
