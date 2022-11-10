@@ -660,12 +660,12 @@ CLEAN_BITCOIN_TEST = test/*.gcda test/*.gcno test/fuzz/*.gcda test/fuzz/*.gcno t
 CLEANFILES += $(CLEAN_BITCOIN_TEST)
 
 if TARGET_WINDOWS
-dash_test: $(TEST_BINARY)
+scc_test: $(TEST_BINARY)
 else
 if ENABLE_BENCH
-dash_test: $(TEST_BINARY) $(BENCH_BINARY)
+scc_test: $(TEST_BINARY) $(BENCH_BINARY)
 else
-dash_test: $(TEST_BINARY)
+scc_test: $(TEST_BINARY)
 endif
 endif
 
