@@ -1,9 +1,9 @@
 # Linearize
 Construct a linear, no-fork, best version of the SCC blockchain.
 
-## Step 0: Install dash_hash
+## Step 0: Install scc_hash
 
-https://github.com/dashpay/dash_hash
+https://github.com/dashpay/scc_hash
 
 ## Step 1: Download hash list
 
