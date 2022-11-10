@@ -121,9 +121,6 @@ void TestGUI(interfaces::Node& node)
         wallet->SetLastBlockProcessed(105, ::ChainActive().Tip()->GetBlockHash());
     }
     {
-        auto locked_chain = wallet->chain().lock();
-        LockAssertion lock(::cs_main);
-
         WalletRescanReserver reserver(wallet.get());
         reserver.reserve();
         CWallet::ScanResult result = wallet->ScanForWalletTransactions(wallet->chain().getBlockHash(0), {} /* stop_block */, reserver, true /* fUpdate */);

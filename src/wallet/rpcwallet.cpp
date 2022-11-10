@@ -1677,8 +1677,6 @@ static UniValue listsinceblock(const JSONRPCRequest& request)
     // the user could have gotten from another RPC command prior to now
     pwallet->BlockUntilSyncedToCurrentChain();
 
-    auto locked_chain = pwallet->chain().lock();
-    LockAssertion lock(::cs_main);
     LOCK(pwallet->cs_wallet);
 
     // The way the 'height' is initialized is just a workaround for the gcc bug #47679 since version 4.6.0.
