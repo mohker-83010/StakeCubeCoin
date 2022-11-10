@@ -63,6 +63,9 @@
            <property name="toolTip">
             <string>Filter propsal list</string>
            </property>
+           <property name="placeholderText">
+            <string>Filter by Title</string>
+           </property>
           </widget>
          </item>
          <item>
