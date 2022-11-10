@@ -1,5 +1,5 @@
 FROM ubuntu:bionic
-LABEL maintainer="Dash Developers <dev@scc.org>"
+LABEL maintainer="SCC Developers <dev@scc.org>"
 LABEL description="Dockerised SCC Core"
 
 ARG USER_ID

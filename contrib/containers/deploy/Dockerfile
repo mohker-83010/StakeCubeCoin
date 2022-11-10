@@ -1,5 +1,5 @@
 FROM phusion/baseimage:bionic-1.0.0
-LABEL maintainer="Dash Developers <dev@scc.org>"
+LABEL maintainer="SCC Developers <dev@scc.org>"
 LABEL description="Dockerised SCC Core, built from Travis"
 
 ARG USER_ID

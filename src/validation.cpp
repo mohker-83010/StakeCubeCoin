@@ -1020,7 +1020,7 @@ NOTE:   unlike bitcoin we are using PREVIOUS block height here,
         might be a good idea to change this to use prev bits
         but current height to avoid confusion.
 
-SCC :   We keep the original Dash logic, adding +1 for the current height.
+SCC :   We keep the original SCC logic, adding +1 for the current height.
         First block contains 7.5m SCC to swap. Remaining coins after the swap period were burned.
 */
 CAmount GetBlockSubsidy(int nPrevHeight)

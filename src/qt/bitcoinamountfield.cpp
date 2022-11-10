@@ -148,7 +148,7 @@ public:
     }
 
 private:
-    int currentUnit{BitcoinUnits::DASH};
+    int currentUnit{BitcoinUnits::SCC};
     bool m_allow_empty{true};
     CAmount m_min_amount{CAmount(0)};
     CAmount m_max_amount{BitcoinUnits::maxMoney()};
