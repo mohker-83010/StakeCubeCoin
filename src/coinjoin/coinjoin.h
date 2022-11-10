@@ -371,9 +371,9 @@ private:
             (COIN / 1000) + 1,
     };
 
+    static Mutex cs_mapdstx;
     static std::map<uint256, CCoinJoinBroadcastTx> mapDSTX GUARDED_BY(cs_mapdstx);
-
-    static CCriticalSection cs_mapdstx;
+    
     static void CheckDSTXes(const CBlockIndex* pindex) LOCKS_EXCLUDED(cs_mapdstx);
 
 public:
