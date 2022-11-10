@@ -138,10 +138,8 @@ struct SignatureData {
 template<typename Stream, typename... X>
 void SerializeToVector(Stream& s, const X&... args)
 {
-    std::vector<unsigned char> ret;
-    CVectorWriter ss(SER_NETWORK, PROTOCOL_VERSION, ret, 0);
-    SerializeMany(ss, args...);
-    s << ret;
+    WriteCompactSize(s, GetSerializeSizeMany(s.GetVersion(), args...));
+    SerializeMany(s, args...);
 }
 
 // Takes a stream and multiple arguments and unserializes them first as a vector then each object individually in the order provided in the arguments
