@@ -8,6 +8,8 @@
 #include <memory>
 #include <string>
 
+class ArgsManager;
+
 /**
  * CBaseChainParams defines the base parameters (shared between scc-cli and sccd)
  * of a given instance of the SCC system.
@@ -44,7 +46,7 @@ std::unique_ptr<CBaseChainParams> CreateBaseChainParams(const std::string& chain
 /**
  *Set the arguments for chainparams
  */
-void SetupChainParamsBaseOptions();
+void SetupChainParamsBaseOptions(ArgsManager& argsman);
 
 /**
  * Return the currently selected parameters. This won't change after app
