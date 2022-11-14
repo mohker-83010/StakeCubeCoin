@@ -51,8 +51,9 @@ class TestP2PConn(P2PInterface):
 
 class LLMQ_IS_CL_Conflicts(SCCTestFramework):
     def set_test_params(self):
-        self.set_scc_test_params(4, 3, fast_dip3_enforcement=True)
-        #disable_mocktime()
+        self.set_scc_test_params(5, 4, fast_dip3_enforcement=True)
+        self.set_scc_llmq_test_params(4, 4)
+        self.supports_cli = False
 
     def run_test(self):
         self.activate_dip8()
