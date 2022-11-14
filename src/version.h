@@ -40,6 +40,9 @@ static const int ISDLOCK_PROTO_VERSION = 70220;
 //! GOVSCRIPT was activated in this version
 static const int GOVSCRIPT_PROTO_VERSION = 70221;
 
+//! ADDRV2 was introduced in this version
+static const int ADDRV2_PROTO_VERSION = 70223;
+
 // Make sure that none of the values above collide with `ADDRV2_FORMAT`.
 
 #endif // BITCOIN_VERSION_H
