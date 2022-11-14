@@ -60,7 +60,7 @@ class LLMQ_IS_CL_Conflicts(SCCTestFramework):
 
         self.test_node = self.nodes[0].add_p2p_connection(TestP2PConn())
 
-        self.nodes[0].spork("SPORK_17_QUORUM_DKG_ENABLED", 0)
+        self.nodes[0].sporkupdate("SPORK_17_QUORUM_DKG_ENABLED", 0)
         self.wait_for_sporks_same()
 
         self.mine_quorum()
@@ -208,7 +208,7 @@ class LLMQ_IS_CL_Conflicts(SCCTestFramework):
         # Ensure spork uniqueness in multiple function runs
         self.bump_mocktime(1)
         # Disable ChainLocks to avoid accidental locking
-        self.nodes[0].spork("SPORK_19_CHAINLOCKS_ENABLED", 4070908800)
+        self.nodes[0].sporkupdate("SPORK_19_CHAINLOCKS_ENABLED", 4070908800)
         self.wait_for_sporks_same()
 
         # Send tx1, which will later conflict with the ISLOCK
@@ -260,7 +260,7 @@ class LLMQ_IS_CL_Conflicts(SCCTestFramework):
             assert_equal(node.getbestblockhash(), islock_tip)
 
         # Check that the CL-ed block overrides the one with islocks
-        self.nodes[0].spork("SPORK_19_CHAINLOCKS_ENABLED", 0)  # Re-enable ChainLocks to accept clsig
+        self.nodes[0].sporkupdate("SPORK_19_CHAINLOCKS_ENABLED", 0)  # Re-enable ChainLocks to accept clsig
         self.test_node.send_clsig(cl)  # relay clsig ASAP to prevent nodes from locking islock-ed tip
         self.wait_for_sporks_same()
         for node in self.nodes:
