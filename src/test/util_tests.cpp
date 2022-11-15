@@ -6,6 +6,7 @@
 
 #include <clientversion.h>
 #include <sync.h>
+#include <test/util/logging.h>
 #include <test/util.h>
 #include <util/getuniquepath.h>
 #include <util/strencodings.h>
@@ -809,7 +810,7 @@ BOOST_FIXTURE_TEST_CASE(util_ArgsMerge, ArgsMergeTestingSetup)
 
     // If check below fails, should manually dump the results with:
     //
-    //   ARGS_MERGE_TEST_OUT=results.txt ./test_dash --run_test=util_tests/util_ArgsMerge
+    //   ARGS_MERGE_TEST_OUT=results.txt ./test_scc --run_test=util_tests/util_ArgsMerge
     //
     // And verify diff against previous results to make sure the changes are expected.
     //
@@ -911,7 +912,7 @@ BOOST_FIXTURE_TEST_CASE(util_ChainMerge, ChainMergeTestingSetup)
 
     // If check below fails, should manually dump the results with:
     //
-    //   CHAIN_MERGE_TEST_OUT=results.txt ./test_dash --run_test=util_tests/util_ChainMerge
+    //   CHAIN_MERGE_TEST_OUT=results.txt ./test_scc --run_test=util_tests/util_ChainMerge
     //
     // And verify diff against previous results to make sure the changes are expected.
     //
@@ -919,6 +920,28 @@ BOOST_FIXTURE_TEST_CASE(util_ChainMerge, ChainMergeTestingSetup)
     //
     //   <input> || <output>
     BOOST_CHECK_EQUAL(out_sha_hex, "3e70723862e346ed6e9b48d8efa13d4d56334c0b73fbf3c3a6ac8b8f4d914f65");
+}
+
+BOOST_AUTO_TEST_CASE(util_ReadWriteSettings)
+{
+    // Test writing setting.
+    TestArgsManager args1;
+    args1.LockSettings([&](util::Settings& settings) { settings.rw_settings["name"] = "value"; });
+    args1.WriteSettingsFile();
+
+    // Test reading setting.
+    TestArgsManager args2;
+    args2.ReadSettingsFile();
+    args2.LockSettings([&](util::Settings& settings) { BOOST_CHECK_EQUAL(settings.rw_settings["name"].get_str(), "value"); });
+
+    // Test error logging, and remove previously written setting.
+    {
+        ASSERT_DEBUG_LOG("Failed renaming settings file");
+        fs::remove(GetDataDir() / "settings.json");
+        fs::create_directory(GetDataDir() / "settings.json");
+        args2.WriteSettingsFile();
+        fs::remove(GetDataDir() / "settings.json");
+    }
 }
 
 BOOST_AUTO_TEST_CASE(util_FormatMoney)

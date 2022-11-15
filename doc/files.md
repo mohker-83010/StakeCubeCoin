@@ -88,6 +88,7 @@ Subdirectory       | File(s)               | Description
 `./`               | `mempool.dat`         | Dump of the mempool's transactions
 `./`               | `onion_v3_private_key` | Cached Tor hidden service private key for `-listenonion` option
 `./`               | `peers.dat`           | Peer IP address database (custom format)
+`./`               | `settings.json`       | Read-write settings set through GUI or RPC interfaces, augmenting manual settings from [dash.conf](dash-conf.md). File is created automatically if read-write settings storage is not disabled with `-nosettings` option. Path can be specified with `-settings` option
 `./`               | `.cookie`             | Session RPC authentication cookie; if used, created at start and deleted on shutdown; can be specified by `-rpccookiefile` option
 `./`               | `.lock`               | Data directory lock file
 

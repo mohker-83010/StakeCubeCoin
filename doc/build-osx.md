@@ -65,7 +65,7 @@ touch "/Users/${USER}/Library/Application Support/SCCCore/dash.conf"
 chmod 600 "/Users/${USER}/Library/Application Support/SCCCore/dash.conf"
 ```
 
-The first time you run dashd, it will start downloading the blockchain. This process could
+The first time you run sccd, it will start downloading the blockchain. This process could
 take many hours, or even days on slower than average systems.
 
 You can monitor the download process by looking at the debug.log file:
@@ -76,7 +76,7 @@ tail -f $HOME/Library/Application\ Support/SCCCore/debug.log
 ## Other commands:
 
 ```shell
-./src/dashd -daemon # Starts the dash daemon.
+./src/sccd -daemon # Starts the scc daemon.
 ./src/scc-cli --help # Outputs a list of command-line options.
 ./src/scc-cli help # Outputs a list of RPC commands when the daemon is running.
 ```
