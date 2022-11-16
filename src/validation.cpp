@@ -1923,7 +1923,7 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
 
     if (block.IsProgPow() && !fJustCheck) {
         if (block.nHeight >= progpow::epoch_length*2000)
-            return state.Invalid(ValidationInvalidReason::CONSENSUS(50, false, REJECT_INVALID, "invalid-progpow-epoch", false, "invalid epoch number");
+            return state.Invalid(ValidationInvalidReason::CONSENSUS, false, REJECT_INVALID, "invalid-progpow-epoch", false, "invalid epoch number");
     }
 
     // verify that the view's current state corresponds to the previous block
@@ -1992,16 +1992,11 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
 
     // SCC: Always enforce BIP30, from block 1
     assert(pindex->pprev);
-    CBlockIndex *pindexBIP34height = pindex->pprev->GetAncestor(chainparams.GetConsensus().BIP34Height);
-    //Only continue to enforce if we're below BIP34 activation height or the block hash at that height doesn't correspond.
-    fEnforceBIP30 = fEnforceBIP30 && (!pindexBIP34height || !(pindexBIP34height->GetBlockHash() == chainparams.GetConsensus().BIP34Hash));
-
-    if (fEnforceBIP30) {
-        for (const auto& tx : block.vtx) {
-            for (size_t o = 0; o < tx->vout.size(); o++) {
-                if (view.HaveCoin(COutPoint(tx->GetHash(), o))) {
-                    return state.Invalid(ValidationInvalidReason::CONSENSUS, error("ConnectBlock(): tried to overwrite transaction"), REJECT_INVALID, "bad-txns-BIP30");
-                }
+    for (const auto& tx : block.vtx) {
+         for (size_t o = 0; o < tx->vout.size(); o++) {
+             if (view.HaveCoin(COutPoint(tx->GetHash(), o))) {
+                 return state.DoS(100, error("ConnectBlock(): tried to overwrite transaction"),
+                                  REJECT_INVALID, "bad-txns-BIP30");
             }
         }
     }
@@ -3792,10 +3787,10 @@ static bool ContextualCheckBlock(const CBlock& block, CValidationState& state, c
 
     // once ProgPow always ProgPow
     if (pindexPrev && pindexPrev->nTime >= consensusParams.nPPSwitchTime && block.nTime < consensusParams.nPPSwitchTime)
-        return state.Invalid(false, REJECT_INVALID, "bad-blk-progpow-state", "Cannot go back from ProgPOW");
+        return state.Invalid(ValidationInvalidReason::CONSENSUS, false, REJECT_INVALID, "bad-blk-progpow-state", "Cannot go back from ProgPOW");
 
     if (block.IsProgPow() && block.nHeight != nHeight)
-        return state.Invalid(ValidationInvalidReason::CONSENSUS(100, false, REJECT_INVALID, "bad-blk-progpow", "ProgPOW height doesn't match chain height");
+        return state.Invalid(ValidationInvalidReason::CONSENSUS, false, REJECT_INVALID, "bad-blk-progpow", "ProgPOW height doesn't match chain height");
 
     // Start enforcing BIP113 (Median Time Past) using versionbits logic.
     int nLockTimeFlags = 0;

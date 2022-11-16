@@ -1208,7 +1208,7 @@ static bool CheckService(const ProTx& proTx, CValidationState& state)
     }
 
     if (!proTx.addr.IsIPv4() && !proTx.addr.IsIPv6()) {
-        return state.Invalid(ValidationInvalidReason::CONSENSUSalid(ValidationInvalidReason::CONSENSUS(10, false, REJECT_INVALID, "bad-protx-ipaddr");
+        return state.Invalid(ValidationInvalidReason::CONSENSUS, false, REJECT_INVALID, "bad-protx-ipaddr");
     }
 
     return true;
