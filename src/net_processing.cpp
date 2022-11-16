@@ -3447,10 +3447,7 @@ bool ProcessMessage(CNode* pfrom, const std::string& msg_type, CDataStream& vRec
                 connman->PushMessage(pfrom, msgMaker.Make(NetMsgType::REJECT, msg_type, (unsigned char)state.GetRejectCode(),
                                    state.GetRejectReason().substr(0, MAX_REJECT_MESSAGE_LENGTH), inv.hash));
             }
-            if (nDoS > 0) {
-                Misbehaving(pfrom->GetId(), nDoS);
-            }
-            llmq::quorumInstantSendManager->TransactionRemovedFromMempool(ptx);
+            MaybePunishNode(pfrom->GetId(), state, /*via_compact_block*/ false);
         }
         return true;
     }
