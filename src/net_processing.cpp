@@ -3419,7 +3419,6 @@ bool ProcessMessage(CNode* pfrom, const std::string& msg_type, CDataStream& vRec
                     RelayTransaction(tx.GetHash(), *connman);
                 }
             }
-            llmq::quorumInstantSendManager->TransactionRemovedFromMempool(ptx);
         }
 
         // If a tx has been detected by recentRejects, we will have reached
@@ -3448,7 +3447,10 @@ bool ProcessMessage(CNode* pfrom, const std::string& msg_type, CDataStream& vRec
                 connman->PushMessage(pfrom, msgMaker.Make(NetMsgType::REJECT, msg_type, (unsigned char)state.GetRejectCode(),
                                    state.GetRejectReason().substr(0, MAX_REJECT_MESSAGE_LENGTH), inv.hash));
             }
-            MaybePunishNode(pfrom->GetId(), state, /*via_compact_block*/ false);
+            if (nDoS > 0) {
+                Misbehaving(pfrom->GetId(), nDoS);
+            }
+            llmq::quorumInstantSendManager->TransactionRemovedFromMempool(ptx);
         }
         return true;
     }
