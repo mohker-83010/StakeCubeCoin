@@ -1923,7 +1923,7 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
 
     if (block.IsProgPow() && !fJustCheck) {
         if (block.nHeight >= progpow::epoch_length*2000)
-            return state.Invalid(ValidationInvalidReason::CONSENSUS, false, REJECT_INVALID, "invalid-progpow-epoch", false, "invalid epoch number");
+            return state.Invalid(ValidationInvalidReason::CONSENSUS, false, REJECT_INVALID, "invalid-progpow-epoch", "invalid epoch number");
     }
 
     // verify that the view's current state corresponds to the previous block
@@ -1995,7 +1995,7 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
     for (const auto& tx : block.vtx) {
          for (size_t o = 0; o < tx->vout.size(); o++) {
              if (view.HaveCoin(COutPoint(tx->GetHash(), o))) {
-                 return state.DoS(100, error("ConnectBlock(): tried to overwrite transaction"),
+                 return state.Invalid(ValidationInvalidReason::CONSENSUS, false, error("ConnectBlock(): tried to overwrite transaction"),
                                   REJECT_INVALID, "bad-txns-BIP30");
             }
         }
