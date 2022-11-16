@@ -1923,7 +1923,7 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
 
     if (block.IsProgPow() && !fJustCheck) {
         if (block.nHeight >= progpow::epoch_length*2000)
-            return state.DoS(50, false, REJECT_INVALID, "invalid-progpow-epoch", false, "invalid epoch number");
+            return state.Invalid(ValidationInvalidReason::CONSENSUS(50, false, REJECT_INVALID, "invalid-progpow-epoch", false, "invalid epoch number");
     }
 
     // verify that the view's current state corresponds to the previous block
@@ -3795,7 +3795,7 @@ static bool ContextualCheckBlock(const CBlock& block, CValidationState& state, c
         return state.Invalid(false, REJECT_INVALID, "bad-blk-progpow-state", "Cannot go back from ProgPOW");
 
     if (block.IsProgPow() && block.nHeight != nHeight)
-        return state.DoS(100, false, REJECT_INVALID, "bad-blk-progpow", "ProgPOW height doesn't match chain height");
+        return state.Invalid(ValidationInvalidReason::CONSENSUS(100, false, REJECT_INVALID, "bad-blk-progpow", "ProgPOW height doesn't match chain height");
 
     // Start enforcing BIP113 (Median Time Past) using versionbits logic.
     int nLockTimeFlags = 0;
