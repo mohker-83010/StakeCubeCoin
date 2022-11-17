@@ -776,8 +776,8 @@ void CLLMQUtils::AddQuorumProbeConnections(const Consensus::LLMQParams& llmqPara
         }
         auto lastOutbound = mmetaman.GetMetaInfo(dmn->proTxHash)->GetLastOutboundSuccess();
         if (curTime - lastOutbound < 10 * 60) {
-             // avoid re-probing nodes too often
-             continue;
+            // avoid re-probing nodes too often
+            continue;
         }
         probeConnections.emplace(dmn->proTxHash);
     }
