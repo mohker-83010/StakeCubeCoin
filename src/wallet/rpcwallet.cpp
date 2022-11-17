@@ -385,7 +385,7 @@ UniValue burn(const JSONRPCRequest& request)
             "<amount> is real and is rounded to the nearest oleg (ex: 0.00000001).\n"
             "You may use 0 as the <amount> to skip a specific burn amount, for only writing data into the chain.\n"
             "The maximum size of data that can be included is " + std::to_string(nMaxDatacarrierBytes - 3) + " bytes, post-encoded.\n"
-            + HelpRequiringPassphrase() + "\n",
+            + HELP_REQUIRING_PASSPHRASE,
             {
                 {"amount", RPCArg::Type::STR, RPCArg::Optional::NO, "The amount of SCC to burn."},
                 {"data", RPCArg::Type::STR, RPCArg::Optional::OMITTED_NAMED_ARG, "The optional data to include, up-to " + std::to_string(nMaxDatacarrierBytes - 3) + " bytes."},
