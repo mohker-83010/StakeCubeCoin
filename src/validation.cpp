@@ -1995,7 +1995,7 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
     for (const auto& tx : block.vtx) {
          for (size_t o = 0; o < tx->vout.size(); o++) {
              if (view.HaveCoin(COutPoint(tx->GetHash(), o))) {
-                 return state.Invalid(ValidationInvalidReason::CONSENSUS, false, error("ConnectBlock(): tried to overwrite transaction"),
+                 return state.Invalid(ValidationInvalidReason::CONSENSUS, error("ConnectBlock(): tried to overwrite transaction"),
                                   REJECT_INVALID, "bad-txns-BIP30");
             }
         }
