@@ -153,11 +153,11 @@ bool CQuorumBlockProcessor::ProcessBlock(const CBlock& block, const CBlockIndex*
         const auto numCommitmentsInNewBlock = qcs.count(params.type);
 
         if (numCommitmentsRequired < numCommitmentsInNewBlock) {
-            return state.DoS(100, false, REJECT_INVALID, "bad-qc-not-allowed");
+            return state.Invalid(ValidationInvalidReason::CONSENSUS, false, REJECT_INVALID, "bad-qc-not-allowed");
         }
 
         if (numCommitmentsRequired > numCommitmentsInNewBlock) {
-            return state.DoS(100, false, REJECT_INVALID, "bad-qc-missing");
+            return state.Invalid(ValidationInvalidReason::CONSENSUS, false, REJECT_INVALID, "bad-qc-missing");
         }
         if (llmq::CLLMQUtils::IsQuorumRotationEnabled(params.type, pindex)) {
             LogPrintf("[ProcessBlock] h[%d] numCommitmentsRequired[%d] numCommitmentsInNewBlock[%d]\n", pindex->nHeight, numCommitmentsRequired, numCommitmentsInNewBlock);
