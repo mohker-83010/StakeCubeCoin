@@ -142,8 +142,10 @@ def check_PE_HIGH_ENTROPY_VA(executable) -> bool:
 
 def check_PE_RELOC_SECTION(executable) -> bool:
     '''Check for a reloc section. This is required for functional ASLR.'''
-    stdout = run_command([OBJDUMP_CMD, '-h',  executable])
-
+    p = subprocess.Popen([OBJDUMP_CMD, '-h',  executable], stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE, universal_newlines=True)
+    (stdout, stderr) = p.communicate()
+    if p.returncode:
+        raise IOError('Error opening file')
     for line in stdout.splitlines():
         if '.reloc' in line:
             return True
