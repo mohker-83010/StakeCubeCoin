@@ -373,7 +373,7 @@ UniValue burn(const JSONRPCRequest& request)
         throw std::runtime_error(
             RPCHelpMan{"burn",
                 "Create a burn transaction and optionally write custom data into the burn transaction, \n"
-                "<amount> is real and is rounded to the nearest oleg (ex: 0.00000001).\n"
+                "<amount> is real and is rounded to the nearest satoshi (ex: 0.00000001).\n"
                 "You may use 0 as the <amount> to skip a specific burn amount, for only writing data into the chain.\n"
                 "The maximum size of data that can be included is " + std::to_string(nMaxDatacarrierBytes - 3) + " bytes, post-encoded.\n"
                 + HelpRequiringPassphrase() + "\n",
@@ -418,7 +418,7 @@ UniValue burn(const JSONRPCRequest& request)
         scriptPubKey = CScript() << OP_RETURN;
     }
 
-    // Amount (Use <amount> parameter if it's larger than 0, else, use a single oleg)
+    // Amount (Use <amount> parameter if it's larger than 0, else, use a single satoshi)
     int64_t nAmount = AmountFromValue(request.params[0].get_real() > 0 ? request.params[0] : 0.00000001);
     CTxDestination address1;
     CTransactionRef tx = BurnMoney(pwallet, scriptPubKey, nAmount);

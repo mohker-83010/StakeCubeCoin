@@ -2860,8 +2860,8 @@ https://www.transifex.com/projects/p/scc/</translation>
         <translation>确认时间目标：</translation>
     </message>
     <message>
-        <source>If the custom fee is set to 1000 olegs and the transaction is only 250 bytes, then "per kilobyte" only pays 250 olegs in fee,&lt;br /&gt;while "at least" pays 1000 olegs. For transactions bigger than a kilobyte both pay by kilobyte.</source>
-        <translation>如果自定手续费设定为1000 olegs，而交易信息只有250字节的话，那么选择"每千字节"就只会支付250 olegs的手续费，&lt;br /&gt;而"至少"会支付1000 olegs。但如果交易信息大于一千字节,那么两者都要按每千字节付费。</translation>
+        <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then "per kilobyte" only pays 250 satoshis in fee,&lt;br /&gt;while "at least" pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
+        <translation>如果自定手续费设定为1000 satoshis，而交易信息只有250字节的话，那么选择"每千字节"就只会支付250 satoshis的手续费，&lt;br /&gt;而"至少"会支付1000 satoshis。但如果交易信息大于一千字节,那么两者都要按每千字节付费。</translation>
     </message>
     <message>
         <source>Paying only the minimum fee is just fine as long as there is less transaction volume than space in the blocks.&lt;br /&gt;But be aware that this can end up in a never confirming transaction once there is more demand for scc transactions than the network can process.</source>

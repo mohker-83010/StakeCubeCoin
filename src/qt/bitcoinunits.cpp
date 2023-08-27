@@ -21,7 +21,7 @@ QList<BitcoinUnits::Unit> BitcoinUnits::availableUnits()
     unitlist.append(SCC);
     unitlist.append(mSCC);
     unitlist.append(uSCC);
-    unitlist.append(olegs);
+    unitlist.append(satoshis);
     return unitlist;
 }
 
@@ -32,7 +32,7 @@ bool BitcoinUnits::valid(int unit)
     case SCC:
     case mSCC:
     case uSCC:
-    case olegs:
+    case satoshis:
         return true;
     default:
         return false;
@@ -48,7 +48,7 @@ QString BitcoinUnits::name(int unit)
             case SCC: return QString("SCC");
             case mSCC: return QString("mSCC");
             case uSCC: return QString::fromUtf8("μSCC");
-            case olegs: return QString("olegs");
+            case satoshis: return QString("satoshis");
             default: return QString("???");
         }
     }
@@ -59,7 +59,7 @@ QString BitcoinUnits::name(int unit)
             case SCC: return QString("tSCC");
             case mSCC: return QString("mtSCC");
             case uSCC: return QString::fromUtf8("μtSCC");
-            case olegs: return QString("tolegs");
+            case satoshis: return QString("tsatoshis");
             default: return QString("???");
         }
     }
@@ -74,7 +74,7 @@ QString BitcoinUnits::description(int unit)
             case SCC: return QString("SCC");
             case mSCC: return QString("Milli-SCC (1 / 1" THIN_SP_UTF8 "000)");
             case uSCC: return QString("Micro-SCC (1 / 1" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
-            case olegs: return QString("Ten Nano-SCC (1 / 100" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
+            case satoshis: return QString("Ten Nano-SCC (1 / 100" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
             default: return QString("???");
         }
     }
@@ -85,7 +85,7 @@ QString BitcoinUnits::description(int unit)
             case SCC: return QString("TestSCCs");
             case mSCC: return QString("Milli-TestSCC (1 / 1" THIN_SP_UTF8 "000)");
             case uSCC: return QString("Micro-TestSCC (1 / 1" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
-            case olegs: return QString("Ten Nano-TestSCC (1 / 100" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
+            case satoshis: return QString("Ten Nano-TestSCC (1 / 100" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
             default: return QString("???");
         }
     }
@@ -98,7 +98,7 @@ qint64 BitcoinUnits::factor(int unit)
     case SCC:  return 100000000;
     case mSCC: return 100000;
     case uSCC: return 100;
-    case olegs: return 1;
+    case satoshis: return 1;
     default:   return 100000000;
     }
 }
@@ -110,7 +110,7 @@ int BitcoinUnits::decimals(int unit)
     case SCC: return 8;
     case mSCC: return 5;
     case uSCC: return 2;
-    case olegs: return 0;
+    case satoshis: return 0;
     default: return 0;
     }
 }

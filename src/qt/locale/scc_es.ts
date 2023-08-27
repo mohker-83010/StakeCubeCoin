@@ -2860,8 +2860,8 @@ https://www.transifex.com/projects/p/scc/</translation>
         <translation>Objetivo de tiempo de confirmación</translation>
     </message>
     <message>
-        <source>If the custom fee is set to 1000 olegs and the transaction is only 250 bytes, then "per kilobyte" only pays 250 olegs in fee,&lt;br /&gt;while "at least" pays 1000 olegs. For transactions bigger than a kilobyte both pay by kilobyte.</source>
-        <translation>Si la comisión personalizada se establece en 1000 olegs y la transacción sólo ocupa 250 bytes, entonces "por kilobyte" sólo se pagan 250 olegs de comisión,&lt;br /&gt;mientras que "como mínimo" paga 1000 olegs. Para transacciones mayores de un kilobyte ambas pagan por kilobyte.</translation>
+        <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then "per kilobyte" only pays 250 satoshis in fee,&lt;br /&gt;while "at least" pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
+        <translation>Si la comisión personalizada se establece en 1000 satoshis y la transacción sólo ocupa 250 bytes, entonces "por kilobyte" sólo se pagan 250 satoshis de comisión,&lt;br /&gt;mientras que "como mínimo" paga 1000 satoshis. Para transacciones mayores de un kilobyte ambas pagan por kilobyte.</translation>
     </message>
     <message>
         <source>Paying only the minimum fee is just fine as long as there is less transaction volume than space in the blocks.&lt;br /&gt;But be aware that this can end up in a never confirming transaction once there is more demand for scc transactions than the network can process.</source>

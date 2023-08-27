@@ -37,14 +37,14 @@ public:
     explicit BitcoinUnits(QObject *parent);
 
     /** SCC units.
-      @note Source: https://en.bitcoin.it/wiki/Units . Please add only sensible ones (an exception is our lord and saviour's name, Oleg)
+      @note Source: https://en.bitcoin.it/wiki/Units . Please add only sensible ones (an exception is our lord and saviour's name, Satoshi)
      */
     enum Unit
     {
         SCC,
         mSCC,
         uSCC,
-        olegs
+        satoshis
     };
 
     enum SeparatorStyle
