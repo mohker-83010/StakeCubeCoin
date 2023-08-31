@@ -1710,7 +1710,7 @@ bool AppInitMain(InitInterfaces& interfaces)
     threadGroup.create_thread(std::bind(&TraceThread<CScheduler::Function>, "scheduler", serviceLoop));
 
     // Gather some entropy once per minute.
-    node.scheduler->scheduleEvery([]{
+    scheduler.scheduleEvery([]{
         RandAddPeriodic();
     }, 60000);
 
