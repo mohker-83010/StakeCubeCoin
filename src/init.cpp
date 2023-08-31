@@ -1714,6 +1714,7 @@ bool AppInitMain(InitInterfaces& interfaces)
         RandAddPeriodic();
     }, 60000);
 
+    GetMainSignals().RegisterBackgroundSignalScheduler(scheduler);
     GetMainSignals().RegisterWithMempoolSignals(mempool);
 
     tableRPC.InitPlatformRestrictions();
