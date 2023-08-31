@@ -75,10 +75,6 @@ int main(int argc, char *argv[])
     BitcoinApplication app(*node);
     app.setApplicationName("SCC-Qt-test");
 
-#if USE_OPENSSL
-    SSL_library_init();
-#endif
-
     AppTests app_tests(app);
     if (QTest::qExec(&app_tests) != 0) {
         fInvalid = true;

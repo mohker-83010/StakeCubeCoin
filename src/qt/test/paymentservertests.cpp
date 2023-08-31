@@ -16,11 +16,6 @@
 #include <test/util/setup_common.h>
 #include <util/strencodings.h>
 
-#if USE_OPENSSL
-#include <openssl/x509.h>
-#include <openssl/x509_vfy.h>
-#endif
-
 #include <QFileOpenEvent>
 #include <QTemporaryFile>
 

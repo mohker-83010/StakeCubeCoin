@@ -24,10 +24,6 @@
 #include <cstdlib>
 #include <memory>
 
-#if USE_OPENSSL
-#include <openssl/x509_vfy.h>
-#endif
-
 #include <QApplication>
 #include <QByteArray>
 #include <QDataStream>
