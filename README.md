@@ -11,7 +11,8 @@ Brief Specifications
 
 * Coin Name:       StakeCubeCoin
 * Coin Ticker:     SCC
-* Consensus:       PoW/MN (FiroPow)
+* Consensus:       PoW/MN (SCCPow)
+* Epoch Length:    3240 blocks
 * MN Collateral:   1000 SCC
 * Block reward:    0.5 - 9 SCC
 * MN reward:       70%
@@ -26,7 +27,7 @@ Brief Specifications
 What is StakeCubeCoin (SCC)?
 -------------------------
 
-StakeCubeCoin is a fork of the Dash codebase; which uses a combination of FiroPow-PoW and Deterministic Masternodes to secure the cryptocurrency's network and blockchain.
+StakeCubeCoin is a fork of the Dash codebase; which uses a combination of SCCPow-PoW and Deterministic Masternodes to secure the cryptocurrency's network and blockchain. SCCPow is based of FiroPow with a small change. Epoch length has been adjusted from 1300 to 3240 blocks. 
 
 The StakeCubeCoin blockchain is further secured by Masternodes, which enforce ChainLocks and InstantSend for a high-speed, secure network monitored by 1000s of Masternodes, constantly producing secure quorums.
 
