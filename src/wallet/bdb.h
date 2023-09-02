@@ -93,6 +93,9 @@ struct bilingual_str;
  /** Return whether a wallet database is currently loaded. */
  bool IsBDBWalletLoaded(const fs::path& wallet_path);
 
+ /** Get BerkeleyEnvironment given a directory path. */
+ std::shared_ptr<BerkeleyEnvironment> GetBerkeleyEnv(const fs::path& env_directory);
+
  class BerkeleyBatch;
 
  /** An instance of this class represents one database.

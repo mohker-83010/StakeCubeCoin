@@ -191,4 +191,9 @@ public:
     std::unique_ptr<DatabaseBatch> MakeBatch(const char* mode = "r+", bool flush_on_close = true) override { return MakeUnique<DummyBatch>(); }
 };
 
+fs::path BDBDataFile(const fs::path& path);
+fs::path SQLiteDataFile(const fs::path& path);
+bool IsBDBFile(const fs::path& path);
+bool IsSQLiteFile(const fs::path& path);
+
 #endif // BITCOIN_WALLET_DB_H

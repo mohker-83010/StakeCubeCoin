@@ -85,6 +85,24 @@ std::shared_ptr<BerkeleyEnvironment> GetWalletEnv(const fs::path& wallet_path, s
     return inserted.first->second.lock();
 }
 
+/**
+ * @param[in] env_directory Path to environment directory
+ * @return A shared pointer to the BerkeleyEnvironment object for the wallet directory, never empty because ~BerkeleyEnvironment
+ * erases the weak pointer from the g_dbenvs map.
+ * @post A new BerkeleyEnvironment weak pointer is inserted into g_dbenvs if the directory path key was not already in the map.
+ */
+std::shared_ptr<BerkeleyEnvironment> GetBerkeleyEnv(const fs::path& env_directory)
+{
+    LOCK(cs_db);
+    auto inserted = g_dbenvs.emplace(env_directory.string(), std::weak_ptr<BerkeleyEnvironment>());
+    if (inserted.second) {
+        auto env = std::make_shared<BerkeleyEnvironment>(env_directory.string());
+        inserted.first->second = env;
+        return env;
+    }
+    return inserted.first->second.lock();
+}
+
 //
 // BerkeleyBatch
 //
