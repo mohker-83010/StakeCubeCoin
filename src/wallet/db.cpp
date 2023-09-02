@@ -3,7 +3,9 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+#include <chainparams.h>
 #include <fs.h>
+#include <logging.h>
 #include <wallet/db.h>
 
 void SplitWalletPath(const fs::path& wallet_path, fs::path& env_directory, std::string& database_filename)
