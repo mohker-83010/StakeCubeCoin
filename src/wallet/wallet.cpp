@@ -5049,6 +5049,7 @@ bool CWallet::Verify(interfaces::Chain& chain, const WalletLocation& location, b
         return false;
     }
 
+    return true;
 }
 
 std::shared_ptr<CWallet> CWallet::CreateWalletFromFile(interfaces::Chain& chain, const WalletLocation& location, bilingual_str& error, std::vector<bilingual_str>& warnings, uint64_t wallet_creation_flags)
@@ -5073,6 +5074,7 @@ std::shared_ptr<CWallet> CWallet::CreateWalletFromFile(interfaces::Chain& chain,
 
     int64_t nStart = GetTimeMillis();
     bool fFirstRun = true;
+    bool fBackupCreated = false;
     // TODO: Can't use std::make_shared because we need a custom deleter but
     // should be possible to use std::allocate_shared.
     std::shared_ptr<CWallet> walletInstance(new CWallet(chain, location, CreateWalletDatabase(location.GetPath())), ReleaseWallet);
@@ -5189,6 +5191,8 @@ std::shared_ptr<CWallet> CWallet::CreateWalletFromFile(interfaces::Chain& chain,
             if (!strBackupError.original.empty()) {
                 return unload_wallet(strBackupError);
             }
+        } else {
+            fBackupCreated = true;
         }
     } else if (wallet_creation_flags & WALLET_FLAG_DISABLE_PRIVATE_KEYS) {
         // Make it impossible to disable private keys after creation
@@ -5406,6 +5410,16 @@ std::shared_ptr<CWallet> CWallet::CreateWalletFromFile(interfaces::Chain& chain,
         walletInstance->WalletLogPrintf("nTimeFirstKey = %u\n",               walletInstance->nTimeFirstKey);
     }
 
+    if (!fBackupCreated) {
+        // Try to create wallet backup after a wallet was loaded
+        bilingual_str strBackupError;
+        if (!walletInstance->AutoBackupWallet("", strBackupError, warnings)) {
+            if (!strBackupError.original.empty()) {
+                return unload_wallet(strBackupError);
+            }
+        }
+    }
+
     return walletInstance;
 }
 
@@ -5479,6 +5493,8 @@ bool CWallet::AutoBackupWallet(const fs::path& wallet_path, bilingual_str& error
         return false;
     }
 
+    WalletLogPrintf("CWallet::AutoBackupWallet(): Attempting wallet backup...\n");
+
     // Create backup of the ...
     struct tm ts;
     time_t time_val = GetTime();
@@ -5492,7 +5508,7 @@ bool CWallet::AutoBackupWallet(const fs::path& wallet_path, bilingual_str& error
 
     if (wallet_path.empty()) {
         // ... opened wallet
-        LOCK2(cs_main, cs_wallet);
+        LOCK(cs_wallet);
         fs::path backupFile = backupsDir / (strWalletName + dateTimeStr);
         backupFile.make_preferred();
         if (!BackupWallet(backupFile.string())) {
@@ -5513,9 +5529,9 @@ bool CWallet::AutoBackupWallet(const fs::path& wallet_path, bilingual_str& error
         }
     } else {
         // ... strWalletName file
-        std::string strSourceFile;
-        std::shared_ptr<BerkeleyEnvironment> env = GetWalletEnv(wallet_path, strSourceFile);
-        fs::path sourceFile = env->Directory() / strSourceFile;
+        fs::path strSourceFile = BDBDataFile(wallet_path);
+        std::shared_ptr<BerkeleyEnvironment> env = GetBerkeleyEnv(strSourceFile.parent_path());
+        fs::path sourceFile = env->Directory() / strSourceFile.filename().string();
         fs::path backupFile = backupsDir / (strWalletName + dateTimeStr);
         sourceFile.make_preferred();
         backupFile.make_preferred();
@@ -5535,6 +5551,10 @@ bool CWallet::AutoBackupWallet(const fs::path& wallet_path, bilingual_str& error
                 nWalletBackups = -1;
                 return false;
             }
+        }else{
+            warnings.push_back(strprintf(_("Failed to create backup, error: File not found.  %s"), sourceFile.string()));
+            WalletLogPrintf("%s\n", Join(warnings, "\n", OpTranslated));
+            return false;
         }
     }
 

@@ -8,6 +8,7 @@
 #include <cachemap.h>
 #include <cachemultimap.h>
 #include <governance/object.h>
+#include <optional>
 
 class CBloomFilter;
 class CBlockIndex;

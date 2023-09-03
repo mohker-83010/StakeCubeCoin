@@ -69,3 +69,6 @@ See COPYING for more information or see https://opensource.org/licenses/MIT.
 
 StakeCubeCoin is derived from code developed by the Dashpay team (https://github.com/dashpay/dash) and where possible, have left all copyright notices and trademarks untouched.
 
+=======
+---------------------
+Distributed under the [MIT software license](/COPYING).
