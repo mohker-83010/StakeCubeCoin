@@ -16,7 +16,7 @@ static const int PROTOCOL_VERSION = 70223;
 static const int INIT_PROTO_VERSION = 209;
 
 //! disconnect from peers older than this proto version
-static const int MIN_PEER_PROTO_VERSION = 70221;
+static const int MIN_PEER_PROTO_VERSION = 70223;
 
 //! minimum proto for ProgPow
 static const int MIN_PP_PROTO_VERSION = 70223;
