@@ -291,28 +291,18 @@ public:
         // release ASAP to avoid it where possible.
         vSeeds.emplace_back("seed1.stakecube.net");
         vSeeds.emplace_back("seed2.stakecube.net");
+        vSeeds.emplace_back("dns.scc.tips");
         // Additional non-seeder connections
-        vSeeds.emplace_back("144.91.104.91");
-        vSeeds.emplace_back("207.180.235.194");
-        vSeeds.emplace_back("62.171.137.83");
-        vSeeds.emplace_back("167.86.98.76");
-        vSeeds.emplace_back("62.171.141.141");
-        vSeeds.emplace_back("167.86.89.3");
+        vSeeds.emplace_back("n2.stakecube.net");
+        vSeeds.emplace_back("n3.stakecube.net");
+        vSeeds.emplace_back("n2.scc.tips");
+        vSeeds.emplace_back("n3.scc.tips");
         vSeeds.emplace_back("207.180.210.172");
         vSeeds.emplace_back("207.180.200.238");
-        vSeeds.emplace_back("207.180.216.182");
-        vSeeds.emplace_back("173.249.38.251");
-        vSeeds.emplace_back("173.249.40.106");
-        vSeeds.emplace_back("173.249.33.139");
-        vSeeds.emplace_back("167.86.85.149");
-        vSeeds.emplace_back("207.180.246.218");
-        vSeeds.emplace_back("79.143.187.234");
         vSeeds.emplace_back("167.86.103.116");
         vSeeds.emplace_back("167.86.110.26");
         vSeeds.emplace_back("173.249.60.78");
-        vSeeds.emplace_back("167.86.97.19");
         vSeeds.emplace_back("167.86.89.31");
-        vSeeds.emplace_back("173.249.31.45");
         vSeeds.emplace_back("173.249.51.179");
 
         // StakeCubeCoin addresses start with 's'
