@@ -5037,7 +5037,9 @@ bool CWallet::Verify(interfaces::Chain& chain, const WalletLocation& location, b
     std::unique_ptr<WalletDatabase> database = CreateWalletDatabase(wallet_path);
 
     try {
-        return database->Verify(error_string);
+        if (!database->Verify(error_string)) {
+            return false;
+        }
     } catch (const fs::filesystem_error& e) {
         error_string = Untranslated(strprintf("Error loading wallet %s. %s", location.GetName(), fsbridge::get_filesystem_error_message(e)));
         return false;
@@ -5074,7 +5076,6 @@ std::shared_ptr<CWallet> CWallet::CreateWalletFromFile(interfaces::Chain& chain,
 
     int64_t nStart = GetTimeMillis();
     bool fFirstRun = true;
-    bool fBackupCreated = false;
     // TODO: Can't use std::make_shared because we need a custom deleter but
     // should be possible to use std::allocate_shared.
     std::shared_ptr<CWallet> walletInstance(new CWallet(chain, location, CreateWalletDatabase(location.GetPath())), ReleaseWallet);
@@ -5191,8 +5192,6 @@ std::shared_ptr<CWallet> CWallet::CreateWalletFromFile(interfaces::Chain& chain,
             if (!strBackupError.original.empty()) {
                 return unload_wallet(strBackupError);
             }
-        } else {
-            fBackupCreated = true;
         }
     } else if (wallet_creation_flags & WALLET_FLAG_DISABLE_PRIVATE_KEYS) {
         // Make it impossible to disable private keys after creation
@@ -5408,16 +5407,6 @@ std::shared_ptr<CWallet> CWallet::CreateWalletFromFile(interfaces::Chain& chain,
         walletInstance->WalletLogPrintf("mapWallet.size() = %u\n",            walletInstance->mapWallet.size());
         walletInstance->WalletLogPrintf("mapAddressBook.size() = %u\n",       walletInstance->mapAddressBook.size());
         walletInstance->WalletLogPrintf("nTimeFirstKey = %u\n",               walletInstance->nTimeFirstKey);
-    }
-
-    if (!fBackupCreated) {
-        // Try to create wallet backup after a wallet was loaded
-        bilingual_str strBackupError;
-        if (!walletInstance->AutoBackupWallet("", strBackupError, warnings)) {
-            if (!strBackupError.original.empty()) {
-                return unload_wallet(strBackupError);
-            }
-        }
     }
 
     return walletInstance;
