@@ -236,12 +236,12 @@ void MasternodeList::updateDIP3List()
             mnStatus = tr("POSE_BANNED");
         } else if (mnList.GetHeight() - dmn.pdmnState->nPoSeRevivedHeight < 20) {
             mnStatus = tr("REVIVED");
-        } else if (dmn.pdmnState->nPoSePenalty >= 3) {
-            mnStatus = tr("POSE_WARN");
+        } else if (dmn.pdmnState->nPoSePenalty >= mnList.GetTotalRegisteredCount()) {
+            mnStatus = tr("POSE_BAN_PASS");
         } else if (dmn.pdmnState->nPoSePenalty >= mnList.GetTotalRegisteredCount() * 0.93) { // 7% tolerance
             mnStatus = tr("POSE_BAN_ALERT");
-        } else if (dmn.pdmnState->nPoSePenalty >= mnList.GetTotalRegisteredCount()) {
-            mnStatus = tr("POSE_BAN_ACTIVE");
+        } else if (dmn.pdmnState->nPoSePenalty >= 3) {
+            mnStatus = tr("POSE_WARN");
         } else {
             mnStatus = tr("ENABLED");
         }
