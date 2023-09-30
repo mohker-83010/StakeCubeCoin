@@ -234,15 +234,26 @@ void MasternodeList::updateDIP3List()
                 return; // ignore this mn entry
             }
             mnStatus = tr("POSE_BANNED");
-        } else if (mnList.GetHeight() - dmn.pdmnState->nPoSeRevivedHeight < 20) {
+        } else if (!mnList.IsMNValid(dmn)) {
+            if (mnList.GetHeight() - dmn.pdmnState->nLastPaidHeight > 10080) {
+                return;
+            }
+            mnStatus = tr("UNKNOWN");
+        } else if (mnList.GetHeight() - dmn.pdmnState->nPoSeRevivedHeight < 30) {
             mnStatus = tr("REVIVED");
         } else if (dmn.pdmnState->nPoSePenalty >= mnList.GetTotalRegisteredCount()) {
-            mnStatus = tr("POSE_BAN_PASS");
-        } else if (dmn.pdmnState->nPoSePenalty >= mnList.GetTotalRegisteredCount() * 0.93) { // 7% tolerance
+            mnStatus = tr("POSE_BAN_ACT");
+        } else if (dmn.pdmnState->nPoSePenalty >= mnList.GetTotalRegisteredCount() * 0.90) { // 10% tolerance
             mnStatus = tr("POSE_BAN_ALERT");
+        } else if (dmn.pdmnState->nPoSePenalty >= mnList.GetTotalRegisteredCount() * 0.10) {
+            mnStatus = tr("POSE_WARNING");
         } else if (dmn.pdmnState->nPoSePenalty >= 3) {
             mnStatus = tr("POSE_WARN");
-        } else {
+        } else if (dmn.pdmnState->nLastPaidHeight <= 0) {
+            mnStatus = tr("ENABLED_INIT");
+        } else if (mnList.GetHeight() > dmn.pdmnState->nLastPaidHeight + mnList.GetTotalRegisteredCount() + 1) {
+            mnStatus = tr("REWARDS_STALL");
+        }  else {
             mnStatus = tr("ENABLED");
         }
 
@@ -251,7 +262,7 @@ void MasternodeList::updateDIP3List()
         auto addr_key = dmn.pdmnState->addr.GetKey();
         QByteArray addr_ba(reinterpret_cast<const char*>(addr_key.data()), addr_key.size());
         QTableWidgetItem* addressItem = new CMasternodeListWidgetItem<QByteArray>(QString::fromStdString(dmn.pdmnState->addr.ToString()), addr_ba);
-        QTableWidgetItem* statusItem = new QTableWidgetItem(mnList.IsMNValid(dmn) ? mnStatus : tr("UNKNOWN"));
+        QTableWidgetItem* statusItem = new QTableWidgetItem(mnStatus);
         QTableWidgetItem* PoSeScoreItem = new CMasternodeListWidgetItem<int>(QString::number(dmn.pdmnState->nPoSePenalty), dmn.pdmnState->nPoSePenalty);
         QTableWidgetItem* registeredItem = new CMasternodeListWidgetItem<int>(QString::number(dmn.pdmnState->nRegisteredHeight), dmn.pdmnState->nRegisteredHeight);
         QTableWidgetItem* lastPaidItem = new CMasternodeListWidgetItem<int>(QString::number(dmn.pdmnState->nLastPaidHeight), dmn.pdmnState->nLastPaidHeight);
