@@ -17,4 +17,6 @@ std::string FormatStateMessage(const CValidationState &state)
         state.GetRejectCode());
 }
 
+// Please see: https://github.com/stakecube/StakeCubeCoin/issues/38
+// FIXME: This should be:  "StakeCubeCoin Signed Message:\n"  !!!!!
 const std::string strMessageMagic = "DarkCoin Signed Message:\n";
