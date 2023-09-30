@@ -222,12 +222,36 @@ void MasternodeList::updateDIP3List()
                 walletModel->wallet().isSpendable(dmn.pdmnState->scriptOperatorPayout);
             if (!fMyMasternode) return;
         }
+
+        QString mnStatus; // Status detail
+        if (mnList.IsMNPoSeBanned(dmn)) { // This mn is PoSe banned for some reason... let check if this was recent
+            // check if last paid height is nil, and check if node has registered in past 30 days
+            if (dmn.pdmnState->nLastPaidHeight <= 0 || mnList.GetHeight() - dmn.pdmnState->nRegisteredHeight > 20160) {
+                return; // ignore this mn entry
+            }
+            // check if node penaly is high within 3 days of registered
+            if (mnList.GetHeight() - dmn.pdmnState->nRegisteredHeight > 2160 && dmn.pdmnState->nPoSePenalty > 99) {
+                return; // ignore this mn entry
+            }
+            mnStatus = tr("POSE_BANNED");
+        } else if (mnList.GetHeight() - dmn.pdmnState->nPoSeRevivedHeight < 20) {
+            mnStatus = tr("REVIVED");
+        } else if (dmn.pdmnState->nPoSePenalty >= 3) {
+            mnStatus = tr("POSE_WARN");
+        } else if (dmn.pdmnState->nPoSePenalty >= mnList.GetTotalRegisteredCount() * 0.93) { // 7% tolerance
+            mnStatus = tr("POSE_BAN_ALERT");
+        } else if (dmn.pdmnState->nPoSePenalty >= mnList.GetTotalRegisteredCount()) {
+            mnStatus = tr("POSE_BAN_ACTIVE");
+        } else {
+            mnStatus = tr("ENABLED");
+        }
+
         // populate list
         // Address, Protocol, Status, Active Seconds, Last Seen, Pub Key
         auto addr_key = dmn.pdmnState->addr.GetKey();
         QByteArray addr_ba(reinterpret_cast<const char*>(addr_key.data()), addr_key.size());
         QTableWidgetItem* addressItem = new CMasternodeListWidgetItem<QByteArray>(QString::fromStdString(dmn.pdmnState->addr.ToString()), addr_ba);
-        QTableWidgetItem* statusItem = new QTableWidgetItem(mnList.IsMNValid(dmn) ? tr("ENABLED") : (mnList.IsMNPoSeBanned(dmn) ? tr("POSE_BANNED") : tr("UNKNOWN")));
+        QTableWidgetItem* statusItem = new QTableWidgetItem(mnList.IsMNValid(dmn) ? mnStatus : tr("UNKNOWN")));
         QTableWidgetItem* PoSeScoreItem = new CMasternodeListWidgetItem<int>(QString::number(dmn.pdmnState->nPoSePenalty), dmn.pdmnState->nPoSePenalty);
         QTableWidgetItem* registeredItem = new CMasternodeListWidgetItem<int>(QString::number(dmn.pdmnState->nRegisteredHeight), dmn.pdmnState->nRegisteredHeight);
         QTableWidgetItem* lastPaidItem = new CMasternodeListWidgetItem<int>(QString::number(dmn.pdmnState->nLastPaidHeight), dmn.pdmnState->nLastPaidHeight);
