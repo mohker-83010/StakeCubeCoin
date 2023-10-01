@@ -225,12 +225,18 @@ void MasternodeList::updateDIP3List()
 
         QString mnStatus; // Status detail
         if (mnList.IsMNPoSeBanned(dmn)) { // This mn is PoSe banned for some reason... let check if this was recent
-            // check if last paid height is nil, and check if node has registered in past 30 days
-            if (dmn.pdmnState->nLastPaidHeight <= 0 || mnList.GetHeight() - dmn.pdmnState->nRegisteredHeight > 20160) {
+            // check if last paid height is nil, and check if node has gotten a reward in past 30 days
+            if (dmn.pdmnState->nLastPaidHeight <= 0 || mnList.GetHeight() - dmn.pdmnState->nLastPaidHeight > 20160) {
                 return; // ignore this mn entry
             }
-            // check if node penaly is high within 3 days of registered
-            if (mnList.GetHeight() - dmn.pdmnState->nRegisteredHeight > 2160 && dmn.pdmnState->nPoSePenalty > 99) {
+            // check if node penaly is high within 3 days of last paid height
+            if (mnList.GetHeight() - dmn.pdmnState->nLastPaidHeight > 2160 && dmn.pdmnState->nPoSePenalty >= mnList.GetTotalRegisteredCount() * 0.66) {
+                return; // ignore this mn entry
+            }
+            if (dmn.pdmnState->nPoSePenalty == 0 && mnList.GetHeight() - dmn.pdmnState->nLastPaidHeight > 5040) {
+                return; // ignore this mn entry
+            }
+            if (dmn.pdmnState->addr.ToString() == "[::]:0") {
                 return; // ignore this mn entry
             }
             mnStatus = tr("POSE_BANNED");
@@ -245,7 +251,7 @@ void MasternodeList::updateDIP3List()
             mnStatus = tr("POSE_BAN_ACT");
         } else if (dmn.pdmnState->nPoSePenalty >= mnList.GetTotalRegisteredCount() * 0.90) { // 10% tolerance
             mnStatus = tr("POSE_BAN_ALERT");
-        } else if (dmn.pdmnState->nPoSePenalty >= mnList.GetTotalRegisteredCount() * 0.10) {
+        } else if (dmn.pdmnState->nPoSePenalty >= mnList.GetTotalRegisteredCount() * 0.33) {
             mnStatus = tr("POSE_WARNING");
         } else if (dmn.pdmnState->nPoSePenalty >= 3) {
             mnStatus = tr("POSE_WARN");
