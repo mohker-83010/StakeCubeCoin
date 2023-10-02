@@ -337,6 +337,7 @@ public Q_SLOTS:
     void optionsClicked();
     /** Linked Resources */
     void openStakeCube();
+    void openExplorer();
     void openNews();
     void openStats();
     void openSCP();
