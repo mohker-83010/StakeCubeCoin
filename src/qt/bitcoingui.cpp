@@ -452,6 +452,9 @@ void BitcoinGUI::createActions()
     openSiteStakeCube = new QAction(tr("&Official Website"), this);
     openSiteStakeCube->setStatusTip(tr("Open the project's Official site. (StakeCube.net)"));
 
+    openSiteExplorer = new QAction(tr("&Explorer"), this);
+    openSiteExplorer->setStatusTip(tr("Open the project's Official explorer. (Coinexplorer.net)"));
+
     openSiteNews = new QAction(tr("&News and Updates"), this);
     openSiteNews->setStatusTip(tr("Open the SC news site. (StakeCube.info)"));
 
@@ -484,6 +487,7 @@ void BitcoinGUI::createActions()
 
     // Helpful resources and links
     connect(openSiteStakeCube, &QAction::triggered, this, &BitcoinGUI::openStakeCube);
+    connect(openSiteExplorer, &QAction::triggered, this, &BitcoinGUI::openExplorer);
     connect(openSiteNews, &QAction::triggered, this, &BitcoinGUI::openNews);
     connect(openSiteStats, &QAction::triggered, this, &BitcoinGUI::openStats);
 
@@ -1092,6 +1096,11 @@ void BitcoinGUI::optionsClicked()
 void BitcoinGUI::openStakeCube()
 {
     QDesktopServices::openUrl(QUrl("https://stakecube.net/"));
+}
+
+void BitcoinGUI::openExplorer()
+{
+    QDesktopServices::openUrl(QUrl("https://www.coinexplorer.net/SCC"));
 }
 
 void BitcoinGUI::openNews()
