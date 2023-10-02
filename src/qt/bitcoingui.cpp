@@ -452,7 +452,7 @@ void BitcoinGUI::createActions()
     openSiteStakeCube = new QAction(tr("&Official Website"), this);
     openSiteStakeCube->setStatusTip(tr("Open the project's Official site. (StakeCube.net)"));
 
-    openSiteExplorer = new QAction(tr("&Explorer"), this);
+    openSiteExplorer = new QAction(tr("&Block Explorer"), this);
     openSiteExplorer->setStatusTip(tr("Open the project's Official explorer. (Coinexplorer.net)"));
 
     openSiteNews = new QAction(tr("&News and Updates"), this);
@@ -670,6 +670,7 @@ void BitcoinGUI::createMenuBar()
     if(walletFrame)
     {
         scLinks->addAction(openSiteStakeCube);
+        scLinks->addAction(openSiteExplorer);
         scLinks->addAction(openSiteNews);
         scLinks->addAction(openSiteStats);
         scLinks->addSeparator();
