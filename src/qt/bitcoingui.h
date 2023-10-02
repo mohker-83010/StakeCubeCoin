@@ -152,6 +152,7 @@ private:
     QAction* lockWalletAction = nullptr;
     QAction* aboutQtAction = nullptr;
     QAction* openSiteStakeCube = nullptr;
+    QAction* openSiteExplorer = nullptr;
     QAction* openSiteNews = nullptr;
     QAction* openSiteStats = nullptr;
     QAction* openSiteSCP = nullptr;
