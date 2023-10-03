@@ -11,19 +11,24 @@ Install the macOS command line tools:
 
 When the popup appears, click `Install`.
 
-Then install [Homebrew](https://brew.sh).
+// lines 19 to 31 commented out for reference
+// "Homebrew" are not official build tools for OSX
+// see "OSX executable? #39" on issues tab for work in progress notes
+// OSX, build from source instructions, currently unavalible
 
-Base build dependencies
------------------------
+// Then install [Homebrew](https://brew.sh).
 
-```bash
-brew install automake libtool pkg-config libnatpmp
-```
+// Base build dependencies
+// -----------------------
 
-If you want to build the disk image with `make deploy` (.dmg / optional), you need RSVG:
-```bash
-brew install librsvg
-```
+// ```bash
+// brew install automake libtool pkg-config libnatpmp
+// ```
+
+// If you want to build the disk image with `make deploy` (.dmg / optional), you need RSVG:
+// ```bash
+// brew install librsvg
+// ```
 
 Building
 --------
