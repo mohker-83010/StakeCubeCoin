@@ -48,7 +48,9 @@ Please replace `<host>` with your local system's `host-platform-triplet`. The fo
 - `i686-pc-linux-gnu` for Linux32
 - `x86_64-pc-linux-gnu` for Linux64
 - `x86_64-w64-mingw32` for Win64
-- `x86_64-apple-darwin19` for macOS
+//- `x86_64-apple-darwin19` for macOS
+// if this build reference is not functioning properly:
+// Terminal command "zsh --version", returns current version (OSX 14.0, Xcode 15, command tools 15) 
 - `arm-linux-gnueabihf` for Linux ARM 32 bit
 - `aarch64-linux-gnu` for Linux ARM 64 bit
 
