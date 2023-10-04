@@ -10,8 +10,15 @@ is supported today.
 
 Required build tools and environment
 ------------------------------------
-Building the dependencies and SCC Core requires some essential build tools to be installed before. Please see
-[build-unix](build-unix.md), [build-osx](build-osx.md) and [build-windows](build-windows.md) for details.
+Building the dependencies and SCC Core requires some essential build tools to be installed before. 
+Please see:
+[build-unix](build-unix.md), 
+[build-osx](build-osx.md)
+// build-osx.md currently references unnecessary "Homebrew" tools
+// OSX build from source with official tools is a work in progress
+// see issues "OSX executable? #39" for notes
+[build-windows](build-windows.md) 
+for details.
 
 Building dependencies
 ---------------------
